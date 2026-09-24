@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0b" />
+<title>projects — 0x-shadow.log</title>
+<meta name="description" content="Every project by 0x-Shadow, live from GitHub. Tap any card for its README." />
+<meta property="og:title" content="projects — 0x-shadow.log" />
+<meta property="og:description" content="Every project by 0x-Shadow, live from GitHub." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
+</head>
+<body>
+<div class="statusbar" role="status">
+  <div class="statusbar-inner">
+    <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+    <span class="status-user">0x-shadow@dev:~$</span>
+    <span class="status-cmd">./projects</span>
+    <span class="status-right"><span id="clock">00:00:00</span> · <span class="ok">● ONLINE</span></span>
+  </div>
+</div>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html">[▓▓] 0x-shadow<span class="accent">.log</span></a>
+    <nav class="nav-links" aria-label="primary">
+      <a href="index.html">home</a>
+      <a href="projects.html" class="active">projects</a>
+      <a href="blog.html">notes</a>
+      <a href="about.html">about</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="themeBtn" class="btn btn-ghost btn-sm" title="toggle theme">◐</button>
+      <a href="blog.html" class="btn btn-solid btn-sm">NOTES →</a>
+    </div>
+    <button id="menuBtn" class="menu-btn" aria-label="open menu" aria-expanded="false">[=]</button>
+  </div>
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="index.html">→ home</a>
+    <a href="projects.html">→ projects</a>
+    <a href="blog.html">→ notes</a>
+    <a href="about.html">→ about</a>
+  </div>
+</header>
+<main id="top">
+  <section class="section">
+    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>projects</span></div>
+    <div class="section-head reveal in">
+      <div>
+        <div class="sec-index">[01] ./projects</div>
+        <h2 class="sec-title">PRO<span class="accent">JECTS</span></h2>
+        <p class="sec-sub">Live from GitHub — tap a card for the full README.</p>
+      </div>
+    </div>
+    <div class="panel reveal in">
+      <div class="panel-bar"><span>● ● ●</span><span>~/projects</span><span id="apiStatus" class="api-status">● LOADING…</span></div>
+      <div id="profileStrip" class="profile-strip">
+        <img id="profileAvatar" class="profile-avatar" src="https://avatars.githubusercontent.com/u/148369845?v=4" alt="0x-Shadow avatar" loading="lazy" referrerpolicy="no-referrer" />
+        <div class="profile-meta">
+          <div class="profile-name"><a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">@0x-Shadow</a> <span id="profileBadge" class="profile-badge">● FETCHING…</span></div>
+          <div id="profileBio" class="profile-bio">shipping tools in public.</div>
+        </div>
+        <div class="profile-stats"><div><b id="profileRepos">–</b><span>repos</span></div><div><b id="profileFollowers">–</b><span>fans</span></div><div><b id="profileStars">–</b><span>★</span></div></div>
+      </div>
+      <div class="controls">
+        <label class="field grow"><span>⌕</span><input id="searchInput" placeholder="filter projects…" autocomplete="off" enterkeyhint="search" /></label>
+        <select id="sortSel" class="select" aria-label="sort">
+          <option value="updated">recent</option>
+          <option value="stars">top ★</option>
+          <option value="name">a → z</option>
+        </select>
+        <select id="langSel" class="select" aria-label="language"><option value="">all langs</option></select>
+        <details class="userbox"><summary>user ⌄</summary>
+          <div class="userbox-row">
+            <input id="userInput" value="0x-Shadow" spellcheck="false" autocomplete="off" aria-label="github username" />
+            <button id="loadBtn" class="btn btn-solid btn-sm">LOAD ↵</button>
+          </div>
+        </details>
+      </div>
+      <div id="skeletons" class="grid">
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      </div>
+      <div id="projectsGrid" class="grid hidden"></div>
+      <div id="emptyState" class="empty hidden">+-- 0 results --+<br>| clear the filter to continue |<br>+-----------------+</div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-row"><span>© <span id="year"></span> 0x-shadow.log</span><span><a href="#top">top ↑</a> · <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">github ↗</a></span></div>
+    </div>
+  </footer>
+</main>
+<nav class="tabbar" aria-label="mobile">
+  <a href="index.html">▓ home</a>
+  <a href="projects.html" class="active">≡ projects</a>
+  <a href="blog.html">✎ notes</a>
+  <a href="about.html">◐ about</a>
+</nav>
+<div id="toast" class="toast" role="status"></div>
+<script src="site.js"></script>
+</body>
+</html>

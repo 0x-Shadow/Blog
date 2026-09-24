@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0b" />
+<title>0x-shadow — code as text</title>
+<meta name="description" content="0x-Shadow — projects + notes in ASCII. ESP32, tools, web." />
+<meta property="og:title" content="0x-shadow — code as text" />
+<meta property="og:description" content="Projects + notes by 0x-Shadow: ESP32 hardware, desktop tools, web." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
+</head>
+<body>
+<div class="statusbar" role="status">
+  <div class="statusbar-inner">
+    <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+    <span class="status-user">0x-shadow@dev:~$</span>
+    <span class="status-cmd">./home</span>
+    <span class="status-right"><span id="clock">00:00:00</span> · <span class="ok">● ONLINE</span></span>
+  </div>
+</div>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html">[▓▓] 0x-shadow<span class="accent">.log</span></a>
+    <nav class="nav-links" aria-label="primary">
+      <a href="index.html" class="active">home</a>
+      <a href="projects.html">projects</a>
+      <a href="blog.html">notes</a>
+      <a href="about.html">about</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="themeBtn" class="btn btn-ghost btn-sm" title="toggle theme">◐</button>
+      <a href="projects.html" class="btn btn-solid btn-sm">PROJECTS ↓</a>
+    </div>
+    <button id="menuBtn" class="menu-btn" aria-label="open menu" aria-expanded="false">[=]</button>
+  </div>
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="index.html">→ home</a>
+    <a href="projects.html">→ projects</a>
+    <a href="blog.html">→ notes</a>
+    <a href="about.html">→ about</a>
+  </div>
+</header>
+<main id="top">
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left reveal in">
+        <div class="eyebrow">FIG.01 — ROBOT+HUMAN · ASCII</div>
+        <h1 class="hero-title">CODE<br>AS <span class="outline">TEXT.</span></h1>
+        <p class="hero-sub"><span class="prompt">&gt;_</span> <span id="typewriter"></span><span class="caret">█</span></p>
+        <p class="hero-desc">I'm <b>@0x-Shadow</b> — ESP32 hardware, desktop tools, web. This site is the index.</p>
+        <div class="hero-cta">
+          <a href="projects.html" class="btn btn-solid">VIEW_PROJECTS ↓</a>
+          <button id="tryAscii" class="btn btn-ghost">TRY_ASCII ⧉</button>
+        </div>
+        <div class="hero-stats">
+          <div><b id="statRepos">–</b><span>repos</span></div>
+          <div><b id="statStars">–</b><span>stars</span></div>
+          <div><b id="statLangs">–</b><span>langs</span></div>
+        </div>
+      </div>
+      <div class="hero-right reveal in">
+        <div class="ascii-window">
+          <div class="win-bar">
+            <span class="win-dots"><i></i><i></i><i></i></span>
+            <span class="win-title">fig01.ascii</span>
+            <div class="win-tabs" role="tablist">
+              <button class="tab active" data-mode="render" role="tab">RENDER</button>
+              <button class="tab" data-mode="image" role="tab">IMAGE→ASCII</button>
+              <button class="tab" data-mode="source" role="tab">TEXT</button>
+            </div>
+          </div>
+          <div class="win-body">
+            <canvas id="asciiCanvas" width="560" height="520" aria-label="live ascii render"></canvas>
+            <div id="imgPane" class="img-pane hidden">
+              <canvas id="imgCanvas" width="560" height="420" aria-label="image to ascii result"></canvas>
+              <div class="img-tools">
+                <label class="upload-btn">UPLOAD ⬆
+                  <input type="file" id="imgInput" accept="image/*" hidden />
+                </label>
+                <button id="avatarBtn" class="mini-btn">MY_AVATAR</button>
+                <button id="downloadBtn" class="mini-btn">.TXT ↓</button>
+                <label class="detail-field">detail <input type="range" id="detailRange" min="60" max="160" value="110" /></label>
+              </div>
+              <div class="drop-hint">…or drop any image here</div>
+            </div>
+            <pre id="asciiSource" class="ascii-source hidden">+----------------------------------------+
+|  _   _   _   __  __    _    _   _       |
+| | | | | | | |  \/  |  / \  | \ | |     |
+| | |_| | | | | |\/| | / _ \ |  \| |    |
+| |  _  | |_| | |  | |/ ___ \| |\  |    |
+| |_| |_|\___/|_|  |_/_/   \_\_| \_|    |
+|                                        |
+|  [HUMAN]      ||      [ROBOT]           |
++----------------------------------------+
+|  CHARS: .:-=+*#%@  MODE: MONO          |
++----------------------------------------+</pre>
+          </div>
+          <div class="win-foot">
+            <span id="winFootLeft">◉ LIVE — touch the render</span>
+            <span class="win-foot-right">[MONO]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">★ featured build</div>
+        <h2 class="sec-title">CREW<span class="accent">TRACK</span></h2>
+      </div>
+      <a href="project.html?owner=0x-Shadow&repo=CrewTrack" class="btn btn-ghost btn-sm">README →</a>
+    </div>
+    <div class="spot reveal">
+      <div class="spot-badge">▲ 80 · r/esp32</div>
+      <div class="spot-main">
+        <h3>€15 offline attendance terminal</h3>
+        <p>Built for my father's electrical crew: tap RFID → ESP32 logs it. No cloud, no fees. 55K views.</p>
+        <div class="spot-chips"><span>ESP32</span><span>RC522 RFID</span><span>ST7789 TFT</span><span>SD + CSV</span><span>WiFi dashboard</span><span>€12–18</span></div>
+      </div>
+      <div class="spot-actions">
+        <a class="btn btn-solid btn-sm" href="https://github.com/0x-Shadow/CrewTrack" target="_blank" rel="noopener">SOURCE ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">[01] ./projects</div>
+        <h2 class="sec-title">TOP<span class="accent">_3</span></h2>
+      </div>
+      <a href="projects.html" class="btn btn-ghost btn-sm">ALL →</a>
+    </div>
+    <div class="panel reveal"><div id="homeGrid" class="grid"></div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">[02] ./notes</div>
+        <h2 class="sec-title">LATE<span class="accent">ST</span></h2>
+      </div>
+      <a href="blog.html" class="btn btn-ghost btn-sm">ALL →</a>
+    </div>
+    <div id="homePosts" class="posts"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">✦ work with me <span class="avail"><i></i>open for projects</span></div>
+        <h2 class="sec-title">HAVE_SOMETHING<span class="accent">_TO_BUILD?</span></h2>
+        <p class="sec-sub">Designed, built, shipped — by one person who answers fast.</p>
+      </div>
+    </div>
+    <div class="hire reveal">
+      <div class="hire-card"><b>01 / ESP32 + IoT</b><span>Gadgets that survive real life — sensors, RFID, dashboards, like CrewTrack.</span></div>
+      <div class="hire-card"><b>02 / Websites</b><span>Fast pages for small business — menus, landing pages, portfolios.</span></div>
+      <div class="hire-card"><b>03 / Small tools</b><span>Clipboard helpers, playgrounds, automations that save hours.</span></div>
+      <a class="btn btn-solid" href="https://github.com/0x-Shadow" target="_blank" rel="noopener">START_ON_GITHUB ↗</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-row"><span>© <span id="year"></span> 0x-shadow.log</span><span><a href="#top">top ↑</a> · <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">github ↗</a></span></div>
+    </div>
+  </footer>
+</main>
+<nav class="tabbar" aria-label="mobile">
+  <a href="index.html" class="active">▓ home</a>
+  <a href="projects.html">≡ projects</a>
+  <a href="blog.html">✎ notes</a>
+  <a href="about.html">◐ about</a>
+</nav>
+<div id="toast" class="toast" role="status"></div>
+<script src="site.js"></script>
+</body>
+</html>

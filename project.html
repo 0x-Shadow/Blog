@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0b" />
+<title>project — 0x-shadow.log</title>
+<meta name="description" content="Project README by 0x-Shadow, rendered as text." />
+<meta property="og:title" content="project — 0x-shadow.log" />
+<meta property="og:description" content="Project README by 0x-Shadow, rendered as text." />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
+</head>
+<body>
+<div id="progress" class="progress"></div>
+<div class="statusbar" role="status">
+  <div class="statusbar-inner">
+    <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+    <span class="status-user">0x-shadow@dev:~$</span>
+    <span class="status-cmd">./readme</span>
+    <span class="status-right"><span id="clock">00:00:00</span> · <span class="ok">● ONLINE</span></span>
+  </div>
+</div>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html">[▓▓] 0x-shadow<span class="accent">.log</span></a>
+    <nav class="nav-links" aria-label="primary">
+      <a href="index.html">home</a>
+      <a href="projects.html" class="active">projects</a>
+      <a href="blog.html">notes</a>
+      <a href="about.html">about</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="themeBtn" class="btn btn-ghost btn-sm" title="toggle theme">◐</button>
+      <a id="navSource" href="projects.html" class="btn btn-solid btn-sm">SOURCE ↗</a>
+    </div>
+    <button id="menuBtn" class="menu-btn" aria-label="open menu" aria-expanded="false">[=]</button>
+  </div>
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="index.html">→ home</a>
+    <a href="projects.html">→ projects</a>
+    <a href="blog.html">→ notes</a>
+    <a href="about.html">→ about</a>
+  </div>
+</header>
+<main id="top">
+  <section class="section" id="projectRoot">
+    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><a href="projects.html">projects</a><span>/</span><span id="crumbRepo">…</span></div>
+
+    <div class="doc-hero reveal in">
+      <div class="doc-kicker"><span class="pulse"></span><span>OPEN SOURCE · MIT-FRIENDLY</span></div>
+      <h1 id="projectTitle" class="doc-title">loading…</h1>
+      <p id="projectDesc" class="doc-desc"></p>
+      <div id="projectMeta" class="sheet-meta"></div>
+      <div id="projectTopics" class="topics" style="margin-top:10px"></div>
+      <div class="doc-actions">
+        <a id="btnSource" class="btn btn-solid btn-sm" target="_blank" rel="noopener" href="projects.html">SOURCE ↗</a>
+        <a id="btnLive" class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="projects.html">LIVE →</a>
+        <a id="btnLog" class="btn btn-ghost btn-sm" href="blog.html" style="display:none">BUILD_LOG ✎</a>
+        <button id="btnCopy" class="btn btn-ghost btn-sm">COPY_LINK ⧉</button>
+      </div>
+    </div>
+
+    <div class="reader">
+      <aside class="toc-wrap reveal in">
+        <details class="toc-box" open>
+          <summary>contents</summary>
+          <nav id="toc" class="toc"></nav>
+        </details>
+      </aside>
+      <article class="panel reveal in">
+        <div class="panel-bar"><span>● ● ●</span><span>README.md</span><span class="api-status live">● RENDERED SAFE</span></div>
+        <div id="readmeBody" class="sheet-body"><div class="md-skel"></div><div class="md-skel"></div><div class="md-skel"></div><div class="md-skel short"></div></div>
+      </article>
+    </div>
+
+    <div class="hire-mini reveal">
+      <div><b>Like this build?</b><span>I take on ESP32, web + tooling projects.</span></div>
+      <a class="btn btn-solid btn-sm" href="https://github.com/0x-Shadow" target="_blank" rel="noopener">HIRE_ME ↗</a>
+    </div>
+
+    <nav id="pager" class="pager"></nav>
+    <div class="section-head reveal" style="margin-top:36px">
+      <div>
+        <div class="sec-index">more builds</div>
+        <h2 class="sec-title" style="font-size:clamp(22px,3.5vw,30px)">KEE<span class="accent">P_GOING</span></h2>
+      </div>
+    </div>
+    <div class="panel reveal"><div id="moreGrid" class="grid"></div></div>
+  </section>
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-row"><span>© <span id="year"></span> 0x-shadow.log</span><span><a href="#top">top ↑</a> · <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">github ↗</a></span></div>
+    </div>
+  </footer>
+</main>
+<nav class="tabbar" aria-label="mobile">
+  <a href="index.html">▓ home</a>
+  <a href="projects.html" class="active">≡ projects</a>
+  <a href="blog.html">✎ notes</a>
+  <a href="about.html">◐ about</a>
+</nav>
+<div id="toast" class="toast" role="status"></div>
+<script src="site.js"></script>
+</body>
+</html>
