@@ -310,6 +310,7 @@ a.card,a.post{text-decoration:none;color:inherit}
 .doc-hero .doc-title{font-size:clamp(30px,5.5vw,48px)}
 .doc-desc{color:var(--dim);font-size:15.5px;margin-top:10px;max-width:62ch}
 .doc-hero .sheet-meta{padding:12px 0 0;border:none}
+.doc-banner{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line2);margin-top:16px}
 .reader{display:grid;grid-template-columns:220px 1fr;gap:12px;align-items:start}
 .toc-wrap{position:sticky;top:120px}
 .toc-box{border:1px solid var(--line2);border-radius:12px;background:var(--panel);font-family:var(--mono);font-size:12px}

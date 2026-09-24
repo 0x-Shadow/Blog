@@ -65,6 +65,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "rescued <b>screenshots</b> → project banners + OG"],
   ["2026.09.24", "readme pages <b>v2</b>: TOC, tables, hire strip"],
   ["2026.09.24", "site goes <b>multi-page</b>: home / projects / readme / notes / about"],
   ["2026.09.24", "CrewTrack story wired: <b>ESP32 + ▲80</b> on r/esp32"],
@@ -644,6 +645,12 @@ const RELATED_POST = {
   ClipTap: "cliptap-clipboard-that-stays-open",
   "Code-Mate": "codemate-no-backend",
 };
+/* repo → rescued screenshot (powers the banner on project pages) */
+const PROJECT_SHOTS = {
+  CrewTrack: "shots/crewtrack.jpg",
+  ClipTap: "shots/cliptap-master.png",
+  SnapTap: "shots/snaptap.png",
+};
 function slugify(s) {
   return String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "s";
 }
@@ -719,6 +726,12 @@ if ($("btnCopy")) $("btnCopy").addEventListener("click", async () => {
     }
     const topics = cleanTopics(meta.topics);
     $("projectTopics").innerHTML = topics.map(t => `<span class="topic">#${esc(t)}</span>`).join("");
+    const banner = $("projectBanner");
+    if (banner) {
+      const shot = PROJECT_SHOTS[meta.name];
+      if (shot) { banner.src = shot; banner.alt = `${meta.name} screenshot`; banner.style.display = ""; }
+      else banner.style.display = "none";
+    }
     try {
       $("readmeBody").innerHTML = await fetchReadme(owner, meta.name, meta.default_branch);
       buildTOC();
