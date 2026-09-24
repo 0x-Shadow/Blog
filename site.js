@@ -547,6 +547,47 @@ let lastAsciiText = "";
   av.src = CONFIG.avatarUrl;
 })();
 
+/* ── TERMINAL playground (home only; static strings only — no network data) ── */
+(function terminal() {
+  const log = $("termLog"), form = $("termForm"), input = $("termInput");
+  if (!log || !form || !input) return;
+  const print = (html, cls) => {
+    const d = document.createElement("div");
+    if (cls) d.className = cls;
+    d.innerHTML = html;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+  };
+  const CMDS = {
+    help: () => `try: <b>projects</b> · <b>notes</b> · <b>whoami</b> · <b>ascii</b> · <b>hire</b> · <b>theme</b> · <b>clear</b>`,
+    projects: () => `6 builds indexed. hottest: <a href="project.html?owner=0x-Shadow&repo=CrewTrack">CrewTrack</a> (ESP32, ▲80). <a href="projects.html">see all →</a>`,
+    notes: () => `5 field notes. latest: <a href="post.html?id=snaptap-capture-tool">SnapTap</a>. <a href="blog.html">read all →</a>`,
+    whoami: () => `0x-Shadow — student builder, Greece. ESP32 · web · homelab. <a href="about.html">full story →</a>`,
+    ascii: () => {
+      const t = document.querySelector('[data-mode="image"]');
+      const w = document.querySelector(".ascii-window");
+      if (t) t.click();
+      if (w) w.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      return `opening the ASCII lab… drop any image in.`;
+    },
+    hire: () => `open for projects: ESP32 · websites · tools. <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">start on GitHub ↗</a>`,
+    theme: () => { const b = $("themeBtn"); if (b) b.click(); return `theme toggled.`; },
+    sudo: () => `nice try. no sudo here — only curiosity.`,
+    clear: () => { log.innerHTML = ""; return null; },
+  };
+  print(`0x-shadow.log — type <b>help</b> to play.`, "dim");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const raw = input.value.trim().slice(0, 60);
+    if (!raw) return;
+    print(`<span class="prompt">&gt;_</span> ${esc(raw)}`);
+    const fn = CMDS[raw.toLowerCase()];
+    const out = fn ? fn() : `unknown: ${esc(raw)} — try <b>help</b>`;
+    if (out) print(out);
+    input.value = "";
+  });
+})();
+
 /* ── page: HOME preview ── */
 (function homePreview() {
   const grid = $("homeGrid"); if (!grid) return;

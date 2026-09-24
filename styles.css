@@ -311,6 +311,16 @@ a.card,a.post{text-decoration:none;color:inherit}
 .doc-desc{color:var(--dim);font-size:15.5px;margin-top:10px;max-width:62ch}
 .doc-hero .sheet-meta{padding:12px 0 0;border:none}
 .doc-banner{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line2);margin-top:16px}
+/* terminal playground */
+.term-log{font-family:var(--mono);font-size:13.5px;line-height:1.75;min-height:132px;max-height:230px;overflow-y:auto;padding:16px 16px 6px;-webkit-overflow-scrolling:touch}
+.term-log .dim{color:var(--faint)}
+.term-log a{color:var(--accent)}
+[data-theme="light"] .term-log a{color:#2f5200}
+.term-log .prompt{color:var(--accent)}
+.term-form{display:flex;align-items:center;gap:10px;padding:6px 16px 16px;font-family:var(--mono);font-size:14px}
+.term-form .prompt{color:var(--accent);font-weight:700}
+[data-theme="light"] .term-form .prompt{color:#4d6b00}
+.term-form input{flex:1;background:transparent;border:none;outline:none;color:var(--ink);font-family:var(--mono);font-size:14px;min-height:44px;min-width:0}
 .reader{display:grid;grid-template-columns:220px 1fr;gap:12px;align-items:start}
 .toc-wrap{position:sticky;top:120px}
 .toc-box{border:1px solid var(--line2);border-radius:12px;background:var(--panel);font-family:var(--mono);font-size:12px}
