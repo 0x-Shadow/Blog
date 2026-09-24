@@ -75,6 +75,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "notes <b>search</b> + native <b>share</b> + RSS buttons"],
   ["2026.09.24", "new note: <b>SnapTap</b> capture tool"],
   ["2026.09.24", "rescued <b>screenshots</b> → project banners + OG"],
   ["2026.09.24", "readme pages <b>v2</b>: TOC, tables, hire strip"],
@@ -691,18 +692,23 @@ function buildTOC() {
   }, { rootMargin: "-25% 0px -65% 0px" });
   heads.forEach(h => spy.observe(h));
 }
-if ($("btnCopy")) $("btnCopy").addEventListener("click", async () => {
-  const url = location.href;
-  try { await navigator.clipboard.writeText(url); toast("link copied"); }
+/* native share (mobile sheet) with clipboard fallback — any [data-share] button */
+async function sharePage() {
+  if (navigator.share) {
+    try { await navigator.share({ title: document.title, url: location.href }); } catch {}
+    return;
+  }
+  try { await navigator.clipboard.writeText(location.href); toast("link copied"); }
   catch {
     const ta = document.createElement("textarea");
-    ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0";
+    ta.value = location.href; ta.style.position = "fixed"; ta.style.opacity = "0";
     document.body.appendChild(ta); ta.select();
     try { document.execCommand("copy"); toast("link copied"); }
     catch { toast("copy failed — long-press the URL"); }
     ta.remove();
   }
-});
+}
+document.querySelectorAll("[data-share]").forEach(b => b.addEventListener("click", sharePage));
 /* ── page: PROJECT detail ── */
 (function projectPage() {
   const root = $("projectRoot"); if (!root) return;
@@ -774,10 +780,17 @@ if ($("btnCopy")) $("btnCopy").addEventListener("click", async () => {
 /* ── page: BLOG index + POST ── */
 (function blogPages() {
   const list = $("postsList");
-  if (list) {
-    list.innerHTML = POSTS.map(postCard).join("");
+  const drawPosts = () => {
+    if (!list) return;
+    const q = $("postSearch") ? $("postSearch").value.trim().toLowerCase() : "";
+    const shown = POSTS.filter(p =>
+      !q || `${p.title} ${p.excerpt} ${p.tag}`.toLowerCase().includes(q));
+    list.innerHTML = shown.length ? shown.map(postCard).join("")
+      : `<div class="empty">+-- 0 notes match --+<br>| clear the filter |<br>+--------------------+</div>`;
     bindReveals(list);
-  }
+  };
+  drawPosts();
+  if ($("postSearch")) $("postSearch").addEventListener("input", drawPosts);
   const root = $("postRoot");
   if (!root) return;
   const p = POSTS.find(x => x.id === params.get("id"));
