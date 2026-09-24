@@ -22,6 +22,16 @@ const DEMO_PROJECTS = [
    3. Write 2-4 short paragraphs in body. 4. Push — done. Newest first. */
 const POSTS = [
   {
+    id: "snaptap-capture-tool", date: "2026.09.24", read: "3 min", tag: "build-log",
+    title: "SnapTap: snap, save, share",
+    excerpt: "A lightweight capture tool with a live demo. Small, fast, MIT.",
+    body: [
+      "SnapTap is a small capture tool with one job: snap something on your screen, save it, share it. No install, no account — there's a live demo on GitHub Pages, so you try it before reading a line of code.",
+      "I built it small on purpose. Capture tools bloat fast: editors, clouds, workspaces. SnapTap keeps the 30-second path and cuts everything else.",
+      "It's MIT licensed JavaScript. Steal the parts you like — that's what it's there for.",
+    ],
+  },
+  {
     id: "cliptap-clipboard-that-stays-open", date: "2026.09.22", read: "4 min", tag: "build-log",
     title: "ClipTap: a clipboard manager that stays open",
     excerpt: "Floating, searchable, offline. Why another clipboard tool — and why this one stuck.",
@@ -65,6 +75,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "new note: <b>SnapTap</b> capture tool"],
   ["2026.09.24", "rescued <b>screenshots</b> → project banners + OG"],
   ["2026.09.24", "readme pages <b>v2</b>: TOC, tables, hire strip"],
   ["2026.09.24", "site goes <b>multi-page</b>: home / projects / readme / notes / about"],
@@ -643,6 +654,7 @@ async function loadProfile(username) {
 const RELATED_POST = {
   CrewTrack: "crewtrack-esp32-terminal",
   ClipTap: "cliptap-clipboard-that-stays-open",
+  SnapTap: "snaptap-capture-tool",
   "Code-Mate": "codemate-no-backend",
 };
 /* repo → rescued screenshot (powers the banner on project pages) */

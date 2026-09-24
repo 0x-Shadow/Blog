@@ -6,6 +6,13 @@
 <description>Build logs by 0x-Shadow. Short, no fluff.</description>
 <language>en</language>
 <item>
+<title>SnapTap: snap, save, share</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=snaptap-capture-tool</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=snaptap-capture-tool</guid>
+<pubDate>Wed, 24 Sep 2026 00:00:00 GMT</pubDate>
+<description>A lightweight capture tool with a live demo. Small, fast, MIT.</description>
+</item>
+<item>
 <title>ClipTap: a clipboard manager that stays open</title>
 <link>https://0x-shadow.github.io/Blog/post.html?id=cliptap-clipboard-that-stays-open</link>
 <guid>https://0x-shadow.github.io/Blog/post.html?id=cliptap-clipboard-that-stays-open</guid>
