@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>0x-shadow.log — notes</title>
+<link>https://0x-shadow.github.io/Blog/blog.html</link>
+<description>Build logs by 0x-Shadow. Short, no fluff.</description>
+<language>en</language>
+<item>
+<title>ClipTap: a clipboard manager that stays open</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=cliptap-clipboard-that-stays-open</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=cliptap-clipboard-that-stays-open</guid>
+<pubDate>Mon, 22 Sep 2026 00:00:00 GMT</pubDate>
+<description>Floating, searchable, offline. Why another clipboard tool — and why this one stuck.</description>
+</item>
+<item>
+<title>An ESP32 terminal for my dad's crew</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=crewtrack-esp32-terminal</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=crewtrack-esp32-terminal</guid>
+<pubDate>Sat, 20 Sep 2026 00:00:00 GMT</pubDate>
+<description>RFID taps, SD logs, local WiFi dashboard. What 80 upvotes on r/esp32 taught me.</description>
+</item>
+<item>
+<title>Any photo to ASCII text</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=photo-to-ascii</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=photo-to-ascii</guid>
+<pubDate>Fri, 05 Sep 2026 00:00:00 GMT</pubDate>
+<description>How the IMAGE to ASCII tab turns pixels into characters.</description>
+</item>
+<item>
+<title>Monaco + Piston, no backend</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=codemate-no-backend</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=codemate-no-backend</guid>
+<pubDate>Fri, 22 Aug 2026 00:00:00 GMT</pubDate>
+<description>Code-Mate architecture on static hosting.</description>
+</item>
+</channel>
+</rss>

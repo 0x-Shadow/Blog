@@ -122,7 +122,50 @@ function fmtInline(s, owner, repo, branch) {
     if (u === "#") return text;
     return `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${text}</a>`;
   });
-  return s.replace(/\*\*([^*][^*]*?)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/\*\*([^*][^*]*?)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/(^|[^*\w])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  return s.replace(/(^|[^\w])_([^_\n]+)_([^\w]|$)/g, "$1<em>$2</em>$3");
+}
+/* GitHub-style raw HTML: escape first, then re-allow a strict subset.
+   Tags + attributes outside this list stay escaped (visible, harmless). */
+const ALLOWED_HTML = {
+  p: ["align"], h1: ["align"], h2: ["align"], h3: ["align"],
+  div: ["align"], center: [], span: [], sub: [], sup: [],
+  b: [], strong: [], i: [], em: [], code: [], pre: [],
+  ul: [], ol: [], li: [], table: [], thead: [], tbody: [],
+  tr: [], th: [], td: [], blockquote: [], details: [], summary: [],
+  br: [], hr: [], img: ["src", "alt", "width", "height", "align"],
+  a: ["href", "title"],
+};
+function unescapeAllowedHtml(t, owner, repo, branch) {
+  return t.replace(/&lt;(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:\s+[a-zA-Z-]+=&quot;.*?&quot;)*)\s*(\/?)&gt;/g,
+    (m, close, tag, attrs, self) => {
+      tag = tag.toLowerCase();
+      if (!Object.prototype.hasOwnProperty.call(ALLOWED_HTML, tag)) return m;
+      if (close) return attrs.trim() ? m : `</${tag}>`;
+      const out = [];
+      const pairs = attrs.match(/[a-zA-Z-]+=&quot;.*?&quot;/g) || [];
+      for (const p of pairs) {
+        const am = p.match(/^([a-zA-Z-]+)=&quot;(.*?)&quot;$/);
+        if (!am) continue;
+        const k = am[1].toLowerCase();
+        let v = am[2].replace(/&quot;/g, "");
+        if (!ALLOWED_HTML[tag].includes(k)) continue;
+        if (k === "align") { if (!/^(left|center|right)$/.test(v)) continue; }
+        else if (k === "width" || k === "height") { if (!/^\d{1,4}(%?)$/.test(v)) continue; }
+        else if (k === "src") { v = resolveReadmeUrl(v.replace(/&amp;/g, "&"), owner, repo, branch, "raw"); if (v === "#") continue; }
+        else if (k === "href") {
+          let u = v.replace(/&amp;/g, "&");
+          u = /^(https?:|\.\/|\.\.\/|#)/i.test(u) ? u : safeUrl(u);
+          if (/^\.\.\//.test(u) || /^\.\//.test(u)) u = resolveReadmeUrl(u, owner, repo, branch, "blob");
+          if (u === "#") continue;
+          v = u;
+        }
+        out.push(`${k}="${esc(v)}"`);
+      }
+      if (tag === "img" || tag === "br" || tag === "hr") return `<${tag}${out.length ? " " + out.join(" ") : ""}>`;
+      return `<${tag}${out.length ? " " + out.join(" ") : ""}>`;
+    });
 }
 function safeMarkdown(md, owner, repo, branch) {
   let t = String(md || "").replace(/\r\n/g, "\n");
@@ -135,13 +178,18 @@ function safeMarkdown(md, owner, repo, branch) {
     return stash(`<pre><code${l ? ` data-lang="${l}"` : ""}>${code.replace(/^\n+|\n+$/g, "")}</code></pre>`);
   });
   t = t.replace(/`([^`\n]+)`/g, (_, code) => stash(`<code>${code}</code>`));
-  /* bare URLs → links (skip ones already inside [text](url)) */
-  t = t.replace(/(\]\()?https:\/\/[^\s<)\]]+/g, (m, pre) => {
-    if (pre) return m;
-    const mm = m.match(/^(.*?)([.,;:!?)]+)$/);
-    const url = mm ? mm[1] : m, trail = mm ? mm[2] : "";
-    return `[${url}](${url})${trail}`;
-  });
+  /* re-allow strict-safe raw HTML (badges, banners, align) — rest stays escaped */
+  t = unescapeAllowedHtml(t, owner, repo, branch);
+  /* bare URLs → links (skip ones already inside [text](url) or <tags>) */
+  t = t.split(/(<[^>\n]*>)/g).map(seg => {
+    if (seg.startsWith("<")) return seg;
+    return seg.replace(/(\]\()?https:\/\/[^\s<)\]]+/g, (m, pre) => {
+      if (pre) return m;
+      const mm = m.match(/^(.*?)([.,;:!?)]+)$/);
+      const url = mm ? mm[1] : m, trail = mm ? mm[2] : "";
+      return `[${url}](${url})${trail}`;
+    });
+  }).join("");
   /* GFM tables → stash (cells get inline formatting) */
   const lines = t.split("\n"), gated = [];
   for (let i = 0; i < lines.length; i++) {
@@ -170,25 +218,29 @@ function safeMarkdown(md, owner, repo, branch) {
   t = fmtInline(t, owner, repo, branch);
   t = t.replace(/^&gt; ?(.*)$/gm, "<blockquote>$1</blockquote>");
   t = t.replace(/^### ([^\n]+)$/gm, "<h3>$1</h3>").replace(/^## ([^\n]+)$/gm, "<h2>$1</h2>").replace(/^# ([^\n]+)$/gm, "<h1>$1</h1>");
+  t = t.replace(/^(?:-{3,}|\*{3,}|_{3,})\s*$/gm, "<hr>");
   const out = [];
-  let inList = false;
+  let listTag = "";
   for (const line of t.split("\n")) {
     const task = line.match(/^\s*[-*] \[( |x|X)\] (.+)$/);
     const item = line.match(/^\s*[-*] (.+)$/);
-    if (task || item) {
-      if (!inList) { out.push("<ul>"); inList = true; }
+    const ordered = line.match(/^\s*\d+\.\s+(.+)$/);
+    const kind = task || item ? "ul" : ordered ? "ol" : "";
+    const text = task ? null : item ? item[1] : ordered ? ordered[1] : "";
+    if (kind) {
+      if (listTag !== kind) { if (listTag) out.push(`</${listTag}>`); out.push(`<${kind}>`); listTag = kind; }
       out.push(task
         ? `<li class="task"><input type="checkbox" disabled${task[1].toLowerCase() === "x" ? " checked" : ""}> ${task[2]}</li>`
-        : `<li>${item[1]}</li>`);
-    } else { if (inList) { out.push("</ul>"); inList = false; } out.push(line); }
+        : `<li>${text}</li>`);
+    } else { if (listTag) { out.push(`</${listTag}>`); listTag = ""; } out.push(line); }
   }
-  if (inList) out.push("</ul>");
+  if (listTag) out.push(`</${listTag}>`);
   return out.join("\n").split(/\n{2,}/).map(b => {
     const s = b.trim();
     if (!s) return "";
     const vm = s.match(/^V(\d+)$/);
     if (vm) return vault[+vm[1]] || "";
-    if (/^<(h1|h2|h3|ul|li|pre|blockquote|img|table)/.test(s) || s.startsWith("<li") || s.startsWith("</ul")) return s;
+    if (/^<\/?(h1|h2|h3|ul|ol|li|pre|blockquote|img|table|thead|tbody|tr|th|td|p|div|details|summary|center|hr|figure)/.test(s)) return s;
     return `<p>${s.replace(/\n/g, "<br>")}</p>`;
   }).join("\n").replace(/ V(\d+) /g, (_, i) => vault[+i] || "");
 }
@@ -536,6 +588,7 @@ function postCard(p) {
       return Date.parse(b.updated_at) - Date.parse(a.updated_at);
     });
     $("skeletons").classList.add("hidden");
+    grid.classList.remove("hidden");
     grid.innerHTML = list.map((r, i) => projectCard(r, i, currentOwner)).join("");
     $("emptyState").classList.toggle("hidden", list.length > 0);
     const langs = [...new Set(allRepos.map(r => r.language).filter(l => typeof l === "string"))].sort();
@@ -606,6 +659,18 @@ function buildTOC() {
     used.add(id); h.id = id;
     return `<a class="toc-${h.tagName.toLowerCase()}" href="#${id}">${esc(h.textContent.trim()).slice(0, 60)}</a>`;
   }).join("");
+  /* collapse on phones, highlight current section while reading */
+  const box = toc.closest(".toc-box");
+  if (box && matchMedia("(max-width: 860px)").matches) box.removeAttribute("open");
+  const links = [...toc.querySelectorAll("a")];
+  const spy = new IntersectionObserver(es => {
+    for (const e of es) {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.toggle("toc-active", a.getAttribute("href") === `#${e.target.id}`));
+      }
+    }
+  }, { rootMargin: "-25% 0px -65% 0px" });
+  heads.forEach(h => spy.observe(h));
 }
 if ($("btnCopy")) $("btnCopy").addEventListener("click", async () => {
   const url = location.href;

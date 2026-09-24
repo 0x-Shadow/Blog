@@ -391,3 +391,30 @@ a.card,a.post{text-decoration:none;color:inherit}
   .marquee-track{animation:none}
   .reveal{opacity:1;transform:none}
 }
+
+/* ── phone-first hardening + reader polish ── */
+.grid > *{min-width:0}
+.card-top span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.win-tabs{overflow-x:auto;max-width:100%}
+.win-tabs .tab{white-space:nowrap;flex-shrink:0}
+.toc a.toc-active{color:var(--ink);background:var(--panel2);border-left:2px solid var(--accent)}
+.md [align="center"]{text-align:center}
+.md center{display:block;text-align:center}
+.md p img{vertical-align:middle;margin:2px;max-width:100%;height:auto}
+.md details{border:1px solid var(--line2);border-radius:10px;padding:6px 14px;margin:.8em 0}
+.md summary{cursor:pointer;font-weight:700;font-family:var(--mono);font-size:13px;min-height:44px;display:flex;align-items:center}
+.md hr{border:none;border-top:1px dashed var(--line2);margin:1.4em 0}
+.md li.task{list-style:none}
+@media(max-width:560px){
+  .controls{grid-template-columns:1fr}
+  .select{width:100%}
+  .doc-actions .btn,.doc-actions button{flex:1 1 44%}
+  .spot-actions .btn{flex:1}
+  .profile-strip{flex-direction:column;align-items:stretch}
+  .profile-meta{min-width:0}
+  .hero-cta .btn{flex:1}
+  .sheet-body{padding:14px 12px}
+  .md pre{padding:10px;font-size:12px}
+  .md table{font-size:12px}
+  .doc-hero{padding:20px 16px}
+}

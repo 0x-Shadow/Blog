@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://0x-shadow.github.io/Blog/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/projects.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/blog.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/project.html?owner=0x-Shadow&amp;repo=CrewTrack</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/post.html?id=cliptap-clipboard-that-stays-open</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/post.html?id=crewtrack-esp32-terminal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/post.html?id=photo-to-ascii</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/post.html?id=codemate-no-backend</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>
