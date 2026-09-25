@@ -75,6 +75,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "reader <b>pro pass</b>: copy-code, zoom, history"],
   ["2026.09.24", "portfolio curated: <b>starred first</b>, weak entries out"],
   ["2026.09.24", "notes <b>search</b> + native <b>share</b> + RSS buttons"],
   ["2026.09.24", "new note: <b>SnapTap</b> capture tool"],
@@ -563,10 +564,11 @@ let lastAsciiText = "";
     log.scrollTop = log.scrollHeight;
   };
   const CMDS = {
-    help: () => `try: <b>projects</b> · <b>notes</b> · <b>whoami</b> · <b>ascii</b> · <b>hire</b> · <b>theme</b> · <b>clear</b>`,
-    projects: () => `6 builds indexed. hottest: <a href="project.html?owner=0x-Shadow&repo=CrewTrack">CrewTrack</a> (ESP32, ▲80). <a href="projects.html">see all →</a>`,
-    notes: () => `5 field notes. latest: <a href="post.html?id=snaptap-capture-tool">SnapTap</a>. <a href="blog.html">read all →</a>`,
+    help: () => `try: <b>projects</b> · <b>notes</b> · <b>whoami</b> · <b>ascii</b> · <b>hire</b> · <b>rss</b> · <b>stats</b> · <b>theme</b> · <b>clear</b>`,
+    projects: () => `${allRepos.length} builds indexed. hottest: <a href="project.html?owner=0x-Shadow&repo=CrewTrack">CrewTrack</a> (ESP32, ▲80). <a href="projects.html">see all →</a>`,
+    notes: () => `${POSTS.length} field notes. latest: <a href="post.html?id=${esc(POSTS[0].id)}">${esc(POSTS[0].title)}</a>. <a href="blog.html">read all →</a>`,
     whoami: () => `0x-Shadow — student builder, Greece. ESP32 · web · homelab. <a href="about.html">full story →</a>`,
+    rss: () => `fresh notes, no algorithm: <a href="feed.xml">feed.xml ⌁</a>`,
     ascii: () => {
       const t = document.querySelector('[data-mode="image"]');
       const w = document.querySelector(".ascii-window");
@@ -577,13 +579,31 @@ let lastAsciiText = "";
     hire: () => `open for projects: ESP32 · websites · tools. <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">start on GitHub ↗</a>`,
     theme: () => { const b = $("themeBtn"); if (b) b.click(); return `theme toggled.`; },
     sudo: () => `nice try. no sudo here — only curiosity.`,
+    stats: () => {
+      const stars = allRepos.reduce((s, r) => s + r.stargazers_count, 0);
+      const langs = new Set(allRepos.map(r => r.language).filter(Boolean)).size;
+      return `${allRepos.length} repos · ★${stars} · ${langs} langs · ${POSTS.length} notes.`;
+    },
     clear: () => { log.innerHTML = ""; return null; },
   };
   print(`0x-shadow.log — type <b>help</b> to play.`, "dim");
+  const hist = [];
+  let hi = -1;
+  input.addEventListener("keydown", e => {
+    if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+    e.preventDefault();
+    if (e.key === "ArrowUp" && hi < hist.length - 1) hi++;
+    if (e.key === "ArrowDown" && hi > 0) hi--;
+    if (e.key === "ArrowDown" && hi <= 0) { hi = -1; input.value = ""; return; }
+    if (hist[hi] != null) input.value = hist[hi];
+  });
   form.addEventListener("submit", e => {
     e.preventDefault();
     const raw = input.value.trim().slice(0, 60);
     if (!raw) return;
+    hist.unshift(raw);
+    if (hist.length > 20) hist.pop();
+    hi = -1;
     print(`<span class="prompt">&gt;_</span> ${esc(raw)}`);
     const fn = CMDS[raw.toLowerCase()];
     const out = fn ? fn() : `unknown: ${esc(raw)} — try <b>help</b>`;
@@ -754,8 +774,46 @@ async function sharePage() {
   }
 }
 document.querySelectorAll("[data-share]").forEach(b => b.addEventListener("click", sharePage));
+/* README upgrades: copy-code buttons + click-to-zoom images */
+function enhanceReadme() {
+  const body = $("readmeBody"); if (!body) return;
+  body.querySelectorAll("pre").forEach(pre => {
+    if (pre.querySelector(".copy-code")) return;
+    const btn = document.createElement("button");
+    btn.className = "copy-code"; btn.textContent = "COPY ⧉";
+    btn.setAttribute("aria-label", "copy code block");
+    btn.addEventListener("click", async () => {
+      const code = pre.querySelector("code") ? pre.querySelector("code").textContent : pre.textContent;
+      try { await navigator.clipboard.writeText(code); toast("code copied"); }
+      catch { toast("copy failed"); }
+    });
+    pre.appendChild(btn);
+  });
+  body.querySelectorAll("img").forEach(img => {
+    img.addEventListener("click", () => openLightbox(img.src, img.alt));
+  });
+}
+function openLightbox(src, alt) {
+  closeLightbox();
+  const ov = document.createElement("div");
+  ov.className = "lightbox"; ov.id = "lightbox";
+  const im = document.createElement("img");
+  im.src = src; im.alt = alt || "image";
+  const hint = document.createElement("span");
+  hint.className = "lb-hint"; hint.textContent = "tap anywhere to close";
+  ov.appendChild(im); ov.appendChild(hint);
+  ov.addEventListener("click", closeLightbox);
+  document.body.appendChild(ov);
+  document.body.style.overflow = "hidden";
+}
+function closeLightbox() {
+  const ov = document.getElementById("lightbox");
+  if (ov) ov.remove();
+  document.body.style.overflow = "";
+}
+addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+
 /* ── page: PROJECT detail ── */
-(function projectPage() {
   const root = $("projectRoot"); if (!root) return;
   const owner = validOwner(params.get("owner")) || CONFIG.githubUsername;
   const repoName = String(params.get("repo") || "").trim();
@@ -810,6 +868,7 @@ document.querySelectorAll("[data-share]").forEach(b => b.addEventListener("click
       const tw = document.querySelector(".toc-wrap");
       if (tw) tw.style.display = "none";
     }
+    enhanceReadme();
     /* prev / next + more */
     const idx = repos.findIndex(r => r.name === meta.name);
     const pager = $("pager");
