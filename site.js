@@ -75,6 +75,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "hero goes <b>full-bleed ASCII sky</b>, terminal proven"],
   ["2026.09.24", "reader <b>pro pass</b>: copy-code, zoom, history"],
   ["2026.09.24", "portfolio curated: <b>starred first</b>, weak entries out"],
   ["2026.09.24", "notes <b>search</b> + native <b>share</b> + RSS buttons"],
@@ -415,16 +416,18 @@ if ($("typewriter")) {
   })();
 }
 if ($("marquee")) $("marquee").textContent = " OPEN_SOURCE ✳ SHIP_IN_PUBLIC ✳ MONO_FOREVER ✳ .:-=+*#%@ ✳ TAP_A_CARD_FOR_README ✳".repeat(6);
-if ($("tryAscii")) $("tryAscii").addEventListener("click", () => {
-  document.querySelector('[data-mode="image"]').click();
-  document.querySelector(".ascii-window").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
+  const pg = $("playground");
+  if (pg) pg.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 });
 
-/* ASCII live field (home only, pauses offscreen) */
-(function asciiField() {
+/* ASCII hero sky (home only): full-bleed field, fades out on scroll */
+(function asciiHero() {
   const cv = $("asciiCanvas"); if (!cv) return;
+  const hero = cv.closest(".hero");
+  const cue = document.querySelector(".scroll-cue");
   const small = matchMedia("(max-width: 560px)").matches;
-  const COLS = small ? 46 : 72, ROWS = small ? 38 : 44;
+  const COLS = small ? 46 : 78, ROWS = small ? 38 : 48;
   const W = cv.width, H = cv.height, RAMP = " .:-=+*#%@";
   const cw = W / COLS, ch = H / ROWS;
   const ctx = cv.getContext("2d");
@@ -432,11 +435,12 @@ if ($("tryAscii")) $("tryAscii").addEventListener("click", () => {
   const o = off.getContext("2d");
   let mx = -999, my = -999, t = 0, visible = true;
   new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
-  cv.addEventListener("pointermove", e => {
+  const zone = hero || cv;
+  zone.addEventListener("pointermove", e => {
     const r = cv.getBoundingClientRect();
     mx = (e.clientX - r.left) / r.width * W; my = (e.clientY - r.top) / r.height * H;
   }, { passive: true });
-  cv.addEventListener("pointerleave", () => { mx = my = -999; });
+  zone.addEventListener("pointerleave", () => { mx = my = -999; });
   function field(x, y) {
     const nx = x / W - 0.5, ny = y / H - 0.5;
     let v = Math.sin(nx * 9 + t * 1.4) * Math.cos(ny * 7 - t) * 0.5 + 0.5;
@@ -469,87 +473,21 @@ if ($("tryAscii")) $("tryAscii").addEventListener("click", () => {
     if (visible && !document.hidden && cv.offsetParent !== null) frame();
     requestAnimationFrame(loop);
   })();
-  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-    b.classList.add("active");
-    const m = b.dataset.mode;
-    $("asciiSource").classList.toggle("hidden", m !== "source");
-    cv.style.display = m === "render" ? "block" : "none";
-    $("imgPane").classList.toggle("hidden", m !== "image");
-    $("winFootLeft").textContent = m === "image" ? "◉ IMAGE→ASCII — upload or drop a photo"
-      : m === "source" ? "◉ SOURCE — raw text" : "◉ LIVE — touch the render";
-  }));
-})();
-
-/* IMAGE → ASCII (home only) */
-let lastAsciiText = "";
-(function imageAscii() {
-  const cv = $("imgCanvas"); if (!cv) return;
-  const RAMP = " .:-=+*#%@";
-  const ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
-  const pane = $("imgPane");
-  function renderImage(img) {
-    const cols = Math.min(160, Math.max(40, parseInt($("detailRange").value, 10) || 110));
-    const rows = Math.max(10, Math.round(cols * (img.height / img.width) * 0.55));
-    const tmp = document.createElement("canvas"); tmp.width = cols; tmp.height = rows;
-    const tc = tmp.getContext("2d", { willReadFrequently: true });
-    tc.drawImage(img, 0, 0, cols, rows);
-    let data;
-    try { data = tc.getImageData(0, 0, cols, rows).data; }
-    catch { toast("cannot read image — upload it instead"); return; }
-    ctx.fillStyle = "#060607"; ctx.fillRect(0, 0, W, H);
-    const cw = W / cols, chh = H / rows;
-    ctx.font = `${Math.min(cw * 1.15, chh)}px "JetBrains Mono", monospace`;
-    ctx.textBaseline = "top";
-    let txt = "";
-    for (let y = 0; y < rows; y++) {
-      let line = "";
-      for (let x = 0; x < cols; x++) {
-        const i = (y * cols + x) * 4;
-        const lum = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114) / 255;
-        const chr = RAMP[Math.min(RAMP.length - 1, (lum * RAMP.length) | 0)];
-        line += chr;
-        if (chr === " ") continue;
-        ctx.fillStyle = lum > 0.85 ? "#fff" : lum > 0.6 ? "#d7d7dc" : lum > 0.35 ? "#8e8e98" : "#4a4a53";
-        ctx.fillText(chr, x * cw, y * chh);
-      }
-      txt += line + "\n";
-    }
-    lastAsciiText = txt;
-    toast(`rendered ${cols}×${rows}`);
-  }
-  function loadFile(f) {
-    if (!f) return;
-    if (!String(f.type || "").startsWith("image/")) { toast("that is not an image"); return; }
-    if (f.size > 8 * 1024 * 1024) { toast("image too big (max 8MB)"); return; }
-    const url = URL.createObjectURL(f), img = new Image();
-    img.onload = () => { renderImage(img); URL.revokeObjectURL(url); };
-    img.onerror = () => toast("could not read that file");
-    img.src = url;
-  }
-  $("imgInput").addEventListener("change", e => loadFile(e.target.files[0]));
-  $("avatarBtn").addEventListener("click", () => {
-    document.querySelector('[data-mode="image"]').click();
-    const img = new Image(); img.crossOrigin = "anonymous";
-    img.onload = () => renderImage(img);
-    img.onerror = () => toast("avatar blocked — upload a screenshot");
-    img.src = CONFIG.avatarUrl;
-  });
-  $("downloadBtn").addEventListener("click", () => {
-    if (!lastAsciiText) { toast("render an image first"); return; }
-    const blob = new Blob([lastAsciiText], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = "ascii-art.txt";
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    toast("saved ascii-art.txt");
-  });
-  ["dragover", "dragenter"].forEach(ev => pane.addEventListener(ev, e => { e.preventDefault(); pane.classList.add("dragover"); }));
-  ["dragleave", "drop"].forEach(ev => pane.addEventListener(ev, e => { e.preventDefault(); pane.classList.remove("dragover"); }));
-  pane.addEventListener("drop", e => loadFile(e.dataTransfer.files && e.dataTransfer.files[0]));
-  const av = new Image(); av.crossOrigin = "anonymous";
-  av.onload = () => { try { renderImage(av); } catch {} };
-  av.src = CONFIG.avatarUrl;
+  /* smooth fade + drift while scrolling away */
+  let ticking = false;
+  const fade = () => {
+    ticking = false;
+    const h = hero ? hero.offsetHeight : 600;
+    const y = Math.min(Math.max(window.scrollY || 0, 0), h);
+    const k = 1 - y / (h * 0.9);
+    cv.style.opacity = Math.max(0, k).toFixed(3);
+    cv.style.transform = `translateY(${Math.round(y * 0.22)}px)`;
+    if (cue) cue.style.opacity = Math.max(0, k * 1.4 - 0.4).toFixed(3);
+  };
+  addEventListener("scroll", () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(fade); }
+  }, { passive: true });
+  fade();
 })();
 
 /* ── TERMINAL playground (home only; static strings only — no network data) ── */
@@ -570,11 +508,8 @@ let lastAsciiText = "";
     whoami: () => `0x-Shadow — student builder, Greece. ESP32 · web · homelab. <a href="about.html">full story →</a>`,
     rss: () => `fresh notes, no algorithm: <a href="feed.xml">feed.xml ⌁</a>`,
     ascii: () => {
-      const t = document.querySelector('[data-mode="image"]');
-      const w = document.querySelector(".ascii-window");
-      if (t) t.click();
-      if (w) w.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      return `opening the ASCII lab… drop any image in.`;
+      scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+      return `look up — the whole sky is live ASCII. move your cursor through it.`;
     },
     hire: () => `open for projects: ESP32 · websites · tools. <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">start on GitHub ↗</a>`,
     theme: () => { const b = $("themeBtn"); if (b) b.click(); return `theme toggled.`; },

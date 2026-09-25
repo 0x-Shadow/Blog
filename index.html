@@ -52,15 +52,17 @@
 </header>
 <main id="top">
   <section class="hero">
-    <div class="hero-inner">
+    <div class="hero-ascii" aria-hidden="true"><canvas id="asciiCanvas" width="640" height="560"></canvas></div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-inner hero-single">
       <div class="hero-left reveal in">
-        <div class="eyebrow">FIG.01 — ROBOT+HUMAN · ASCII</div>
+        <div class="eyebrow">FIG.01 — ROBOT+HUMAN · LIVE ASCII SKY</div>
         <h1 class="hero-title">CODE<br>AS <span class="outline">TEXT.</span></h1>
         <p class="hero-sub"><span class="prompt">&gt;_</span> <span id="typewriter"></span><span class="caret">█</span></p>
         <p class="hero-desc">I'm <b>@0x-Shadow</b> — ESP32 hardware, desktop tools, web. This site is the index.</p>
         <div class="hero-cta">
           <a href="projects.html" class="btn btn-solid">VIEW_PROJECTS ↓</a>
-          <button id="tryAscii" class="btn btn-ghost">TRY_ASCII ⧉</button>
+          <button id="tryTerm" class="btn btn-ghost">TERMINAL ↓</button>
         </div>
         <div class="hero-stats">
           <div><b id="statRepos">–</b><span>repos</span></div>
@@ -68,57 +70,18 @@
           <div><b id="statLangs">–</b><span>langs</span></div>
         </div>
       </div>
-      <div class="hero-right reveal in">
-        <div class="ascii-window">
-          <div class="win-bar">
-            <span class="win-dots"><i></i><i></i><i></i></span>
-            <span class="win-title">fig01.ascii</span>
-            <div class="win-tabs" role="tablist">
-              <button class="tab active" data-mode="render" role="tab">RENDER</button>
-              <button class="tab" data-mode="image" role="tab">IMAGE→ASCII</button>
-              <button class="tab" data-mode="source" role="tab">TEXT</button>
-            </div>
-          </div>
-          <div class="win-body">
-            <canvas id="asciiCanvas" width="560" height="520" aria-label="live ascii render"></canvas>
-            <div id="imgPane" class="img-pane hidden">
-              <canvas id="imgCanvas" width="560" height="420" aria-label="image to ascii result"></canvas>
-              <div class="img-tools">
-                <label class="upload-btn">UPLOAD ⬆
-                  <input type="file" id="imgInput" accept="image/*" hidden />
-                </label>
-                <button id="avatarBtn" class="mini-btn">MY_AVATAR</button>
-                <button id="downloadBtn" class="mini-btn">.TXT ↓</button>
-                <label class="detail-field">detail <input type="range" id="detailRange" min="60" max="160" value="110" /></label>
-              </div>
-              <div class="drop-hint">…or drop any image here</div>
-            </div>
-            <pre id="asciiSource" class="ascii-source hidden">+----------------------------------------+
-|  _   _   _   __  __    _    _   _       |
-| | | | | | | |  \/  |  / \  | \ | |     |
-| | |_| | | | | |\/| | / _ \ |  \| |    |
-| |  _  | |_| | |  | |/ ___ \| |\  |    |
-| |_| |_|\___/|_|  |_/_/   \_\_| \_|    |
-|                                        |
-|  [HUMAN]      ||      [ROBOT]           |
-+----------------------------------------+
-|  CHARS: .:-=+*#%@  MODE: MONO          |
-+----------------------------------------+</pre>
-          </div>
-          <div class="win-foot">
-            <span id="winFootLeft">◉ LIVE — touch the render</span>
-            <span class="win-foot-right">[MONO]</span>
-          </div>
-        </div>
-      </div>
     </div>
+    <div class="scroll-cue" aria-hidden="true">scroll ↓</div>
     <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
   </section>
 
-  <section class="section">
+  <section class="section" id="playground">
     <div class="section-head reveal">
       <div>
         <div class="sec-index">✦ playground — it's alive, try it</div>
+        <h2 class="sec-title">SAY<span class="accent">_HI</span></h2>
+      </div>
+    </div>
         <h2 class="sec-title">SAY<span class="accent">_HI</span></h2>
       </div>
     </div>
