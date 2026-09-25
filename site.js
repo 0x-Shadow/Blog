@@ -22,6 +22,17 @@ const DEMO_PROJECTS = [
    3. Write 2-4 short paragraphs in body. 4. Push — done. Newest first. */
 const POSTS = [
   {
+    id: "crewpay-next-build", date: "2026.09.25", read: "4 min", tag: "build-log",
+    title: "Next build: CrewPay — from taps to paydays",
+    excerpt: "CrewTrack logs the days. Nobody totals the wages. Fixing that next, in one page.",
+    body: [
+      "CrewTrack solved half the month-end problem: every tap is logged, no more arguing about who showed up. But the second question survived untouched — how much does each worker actually get paid? That's still mental math: days times daily wage, per person, on paper.",
+      "And it's not just my dad's crew. Small food shops describe the same ritual: drowning in month-end arithmetic, quoted $330 a month for software that does 500 things when they need 3. The pattern is always the same — small boring math, done by hand, every month.",
+      "So CrewPay: drop CrewTrack CSVs into one page, get a per-worker table of days times wage, print it or export it. Parsed in the browser, no account, no cloud — offline like everything I build. Version one does three things and nothing else: CSV import, editable wages, print and export. No payroll, no tax, no accounts.",
+      "I'm building it in the open. Next log gets the demo and the repo link. And if you run a crew or a small shop — what does your month-end ritual look like? Open an issue and tell me; the best edge cases come from real counters, not my desk.",
+    ],
+  },
+  {
     id: "snaptap-capture-tool", date: "2026.09.24", read: "3 min", tag: "build-log",
     title: "SnapTap: snap, save, share",
     excerpt: "A lightweight capture tool with a live demo. Small, fast, MIT.",
@@ -75,6 +86,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.25", "announced next build: <b>CrewPay</b>"],
   ["2026.09.24", "<b>lab page</b> + build log + DNA cards go live"],
   ["2026.09.24", "hero goes <b>full-bleed ASCII sky</b>, terminal proven"],
   ["2026.09.24", "reader <b>pro pass</b>: copy-code, zoom, history"],
