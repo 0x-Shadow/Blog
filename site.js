@@ -14,7 +14,7 @@ const DEMO_PROJECTS = [
   { name: "SnapTap", description: "Snap, save & share — lightweight capture tool.", language: "JavaScript", stargazers_count: 3, forks_count: 0, updated_at: "2026-09-15T11:24:05Z", html_url: "https://github.com/0x-Shadow/SnapTap", homepage: "https://0x-shadow.github.io/SnapTap/", topics: ["tool"], featured: true },
   { name: "ClipTap", description: "Floating clipboard manager for Windows. Searchable, offline, open source.", language: "JavaScript", stargazers_count: 0, forks_count: 0, updated_at: "2026-09-15T17:58:53Z", html_url: "https://github.com/0x-Shadow/ClipTap", homepage: "https://0x-shadow.github.io/ClipTap/", topics: ["windows", "offline"], featured: true },
   { name: "Code-Mate", description: "Online code playground — Monaco + Piston.", language: "TypeScript", stargazers_count: 0, forks_count: 0, updated_at: "2026-09-12T11:27:18Z", html_url: "https://github.com/0x-Shadow/Code-Mate", homepage: "", topics: ["playground"] },
-  { name: "Blog", description: "This blog — ASCII aesthetic + live GitHub index.", language: "TypeScript", stargazers_count: 0, forks_count: 0, updated_at: "2026-09-23T20:32:11Z", html_url: "https://github.com/0x-Shadow/Blog", homepage: "", topics: ["blog"] },
+  { name: "PassStrengthAnalyzer", description: "Password strength analyzer in Python.", language: "Python", stargazers_count: 1, forks_count: 0, updated_at: "2025-06-07T09:31:42Z", html_url: "https://github.com/0x-Shadow/PassStrengthAnalyzer", homepage: "", topics: ["python", "security"] },
   { name: "Intelligent-Film-Production-Search", description: "Intelligent search over film-production data.", language: "Python", stargazers_count: 1, forks_count: 0, updated_at: "2026-01-25T11:31:40Z", html_url: "https://github.com/0x-Shadow/Intelligent-Film-Production-Search", homepage: "", topics: ["python"] },
 ];
 /* HOW TO POST (30 seconds, no build):
@@ -75,6 +75,7 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "portfolio curated: <b>starred first</b>, weak entries out"],
   ["2026.09.24", "notes <b>search</b> + native <b>share</b> + RSS buttons"],
   ["2026.09.24", "new note: <b>SnapTap</b> capture tool"],
   ["2026.09.24", "rescued <b>screenshots</b> → project banners + OG"],
@@ -308,9 +309,12 @@ if (prog) addEventListener("scroll", () => {
 function cleanTopics(topics) {
   return (Array.isArray(topics) ? topics : []).filter(t => typeof t === "string" && /^[a-z0-9][a-z0-9-]{0,29}$/i.test(t)).slice(0, 3);
 }
+/* repos hidden from the portfolio (weak/duplicate entries) */
+const HIDDEN = new Set(["blog", "assasina_katgr"]);
 function sanitizeRepo(r, username) {
   if (!r || typeof r.name !== "string" || !/^[\w.\-+]{1,100}$/.test(r.name)) return null;
   if (r.fork || r.name.toLowerCase() === String(username).toLowerCase()) return null;
+  if (HIDDEN.has(r.name.toLowerCase())) return null;
   return {
     name: r.name,
     description: typeof r.description === "string" ? r.description.slice(0, 220) : "",
@@ -327,7 +331,7 @@ function sanitizeRepo(r, username) {
   };
 }
 async function getRepos(owner) {
-  const key = "repos:" + String(owner).toLowerCase();
+  const key = "repos:v2:" + String(owner).toLowerCase();
   try {
     const raw = sessionStorage.getItem(key);
     if (raw) {
