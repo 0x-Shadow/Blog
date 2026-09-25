@@ -814,6 +814,7 @@ function closeLightbox() {
 addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
 
 /* ── page: PROJECT detail ── */
+(function projectPage() {
   const root = $("projectRoot"); if (!root) return;
   const owner = validOwner(params.get("owner")) || CONFIG.githubUsername;
   const repoName = String(params.get("repo") || "").trim();
