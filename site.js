@@ -792,7 +792,12 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
     const repo = repos.find(r => r.name.toLowerCase() === repoName.toLowerCase()) || null;
     const meta = repo || { name: repoName, description: "", language: "", stargazers_count: 0, forks_count: 0, updated_at: "", html_url: `https://github.com/${owner}/${repoName}`, homepage: "#", topics: [], license: "", default_branch: "main" };
     $("projectTitle").textContent = meta.name;
-    if ($("projectDesc")) $("projectDesc").textContent = meta.description || "No description yet — the README below says more.";
+    if ($("projectDesc")) {
+      const d = meta.description || "";
+      if (!d) { $("projectDesc").style.display = ""; $("projectDesc").textContent = "No description yet — the README below says more."; }
+      else if (d.toLowerCase() === meta.name.toLowerCase()) $("projectDesc").style.display = "none";
+      else { $("projectDesc").style.display = ""; $("projectDesc").textContent = d; }
+    }
     const md = document.querySelector('meta[name="description"]');
     if (md && meta.description) md.content = `${meta.name}: ${meta.description}`.slice(0, 160);
     const lic = meta.license ? `<span>◈ ${esc(meta.license)}</span>` : "";
