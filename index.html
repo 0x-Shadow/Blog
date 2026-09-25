@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0b" />
 <title>0x-shadow — code as text</title>
-<meta name="description" content="0x-Shadow — projects + notes in ASCII. ESP32, tools, web." />
+<meta name="description" content="0x-Shadow — projects + build log in ASCII. ESP32, tools, web." />
 <meta property="og:title" content="0x-shadow — code as text" />
-<meta property="og:description" content="Projects + notes by 0x-Shadow: ESP32 hardware, desktop tools, web." />
+<meta property="og:description" content="Projects + build log by 0x-Shadow: ESP32 hardware, desktop tools, web." />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="og:image" content="https://0x-shadow.github.io/Blog/shots/crewtrack.jpg" />
@@ -34,7 +34,8 @@
     <nav class="nav-links" aria-label="primary">
       <a href="index.html" class="active">home</a>
       <a href="projects.html">projects</a>
-      <a href="blog.html">notes</a>
+      <a href="blog.html">log</a>
+      <a href="lab.html">lab</a>
       <a href="about.html">about</a>
     </nav>
     <div class="nav-actions">
@@ -46,7 +47,8 @@
   <div id="mobileMenu" class="mobile-menu">
     <a href="index.html">→ home</a>
     <a href="projects.html">→ projects</a>
-    <a href="blog.html">→ notes</a>
+    <a href="blog.html">→ log</a>
+    <a href="lab.html">→ lab</a>
     <a href="about.html">→ about</a>
   </div>
 </header>
@@ -73,26 +75,6 @@
     </div>
     <div class="scroll-cue" aria-hidden="true">scroll ↓</div>
     <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
-  </section>
-
-  <section class="section" id="playground">
-    <div class="section-head reveal">
-      <div>
-        <div class="sec-index">✦ playground — it's alive, try it</div>
-        <h2 class="sec-title">SAY<span class="accent">_HI</span></h2>
-      </div>
-    </div>
-        <h2 class="sec-title">SAY<span class="accent">_HI</span></h2>
-      </div>
-    </div>
-    <div class="panel reveal">
-      <div class="panel-bar"><span>● ● ●</span><span>~/terminal — type <code>help</code></span></div>
-      <div id="termLog" class="term-log" aria-live="polite"></div>
-      <form id="termForm" class="term-form" autocomplete="off">
-        <span class="prompt">&gt;_</span>
-        <input id="termInput" placeholder="help" spellcheck="false" aria-label="terminal command" enterkeyhint="go" maxlength="60" />
-      </form>
-    </div>
   </section>
 
   <section class="section">
@@ -130,7 +112,42 @@
   <section class="section">
     <div class="section-head reveal">
       <div>
-        <div class="sec-index">[02] ./notes</div>
+        <div class="sec-index">◉ now building — CrewTrack v1.1</div>
+        <h2 class="sec-title">ROAD<span class="accent">MAP</span></h2>
+      </div>
+      <a href="project.html?owner=0x-Shadow&repo=CrewTrack" class="btn btn-ghost btn-sm">FOLLOW →</a>
+    </div>
+    <div class="panel reveal">
+      <div class="panel-bar"><span>● ● ●</span><span>~/roadmap — straight from the README</span></div>
+      <div class="roadmap">
+        <div class="road-col"><b>NOW</b><span>Tap In / Tap Out</span><span>Hours-based report</span></div>
+        <div class="road-col"><b>NEXT</b><span>Multi-site support</span><span>Overtime tracking</span></div>
+        <div class="road-col"><b>LATER</b><span>BLE passive detection</span><span>MQTT sync</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="playground">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">✦ playground — it's alive, try it</div>
+        <h2 class="sec-title">SAY<span class="accent">_HI</span></h2>
+      </div>
+    </div>
+    <div class="panel reveal">
+      <div class="panel-bar"><span>● ● ●</span><span>~/terminal — type <code>help</code></span></div>
+      <div id="termLog" class="term-log" aria-live="polite"></div>
+      <form id="termForm" class="term-form" autocomplete="off">
+        <span class="prompt">&gt;_</span>
+        <input id="termInput" placeholder="help" spellcheck="false" aria-label="terminal command" enterkeyhint="go" maxlength="60" />
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">[02] ./build-log</div>
         <h2 class="sec-title">LATE<span class="accent">ST</span></h2>
       </div>
       <a href="blog.html" class="btn btn-ghost btn-sm">ALL →</a>
@@ -163,7 +180,8 @@
 <nav class="tabbar" aria-label="mobile">
   <a href="index.html" class="active">▓ home</a>
   <a href="projects.html">≡ projects</a>
-  <a href="blog.html">✎ notes</a>
+  <a href="blog.html">✎ log</a>
+  <a href="lab.html">◈ lab</a>
   <a href="about.html">◐ about</a>
 </nav>
 <div id="toast" class="toast" role="status"></div>

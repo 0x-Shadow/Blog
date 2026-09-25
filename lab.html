@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0b" />
-<title>about — 0x-shadow.log</title>
-<meta name="description" content="Who is 0x-Shadow: ESP32, homelab, web. Greece." />
-<meta property="og:title" content="about — 0x-shadow.log" />
-<meta property="og:description" content="0x-Shadow: student builder in Greece — ESP32, homelab, web." />
+<title>lab — 0x-shadow.log</title>
+<meta name="description" content="The lab: ESP32 bench, homelab, and open questions. 0x-Shadow." />
+<meta property="og:title" content="lab — 0x-shadow.log" />
+<meta property="og:description" content="ESP32 bench, homelab, and open questions." />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="og:image" content="https://0x-shadow.github.io/Blog/shots/crewtrack.jpg" />
@@ -22,7 +22,7 @@
   <div class="statusbar-inner">
     <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
     <span class="status-user">0x-shadow@dev:~$</span>
-    <span class="status-cmd">./whoami</span>
+    <span class="status-cmd">./lab</span>
     <span class="status-right"><span id="clock">00:00:00</span> · <span class="ok">● ONLINE</span></span>
   </div>
 </div>
@@ -33,12 +33,12 @@
       <a href="index.html">home</a>
       <a href="projects.html">projects</a>
       <a href="blog.html">log</a>
-      <a href="lab.html">lab</a>
-      <a href="about.html" class="active">about</a>
+      <a href="lab.html" class="active">lab</a>
+      <a href="about.html">about</a>
     </nav>
     <div class="nav-actions">
       <button id="themeBtn" class="btn btn-ghost btn-sm" title="toggle theme">◐</button>
-      <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener" class="btn btn-solid btn-sm">GITHUB ↗</a>
+      <a href="projects.html" class="btn btn-solid btn-sm">PROJECTS ↓</a>
     </div>
     <button id="menuBtn" class="menu-btn" aria-label="open menu" aria-expanded="false">[=]</button>
   </div>
@@ -52,37 +52,45 @@
 </header>
 <main id="top">
   <section class="section">
-    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>about</span></div>
+    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>lab</span></div>
     <div class="section-head reveal in">
       <div>
-        <div class="sec-index">[03] ./whoami</div>
-        <h2 class="sec-title">WHO<span class="accent">AMI</span></h2>
+        <div class="sec-index">[04] ./lab</div>
+        <h2 class="sec-title">THE<span class="accent">_LAB</span></h2>
+        <p class="sec-sub">Where things get built: the bench, the homelab, and the open questions.</p>
       </div>
     </div>
     <div class="about-grid">
       <div class="panel about-card reveal in">
-        <div class="panel-bar"><span>● ● ●</span><span>~/whoami.txt</span></div>
-        <p>I'm <b>0x-Shadow</b>, a student builder in <b>Greece</b> — ESP32/IoT for real clients, websites + restaurant menus, and a homelab (TrueNAS · NUC + RPi) where it all lives.</p>
+        <div class="panel-bar"><span>● ● ●</span><span>~/bench.txt</span></div>
+        <p><b>Hardware bench</b> — the parts behind CrewTrack and every prototype:</p>
+        <div class="stack-row" id="benchRow"></div>
         <ul class="whoami-list">
-          <li><span>→</span> <a href="https://github.com/0x-Shadow" target="_blank" rel="noopener">github.com/0x-Shadow ↗</a></li>
-          <li><span>→</span> <a href="https://www.reddit.com/user/Worth_Wedding2216/" target="_blank" rel="noopener">reddit: u/Worth_Wedding2216 ↗</a></li>
-          <li><span>→</span> CrewTrack — ESP32 RFID terminal, ▲80 on r/esp32</li>
-          <li><span>→</span> homelab: Nextcloud · Immich · Jellyfin · Pi-hole · Tailscale</li>
-          <li><span>→</span> status: <span class="avail"><i></i>open for projects</span></li>
-          <li><span>→</span> homelab: Nextcloud · Immich · Jellyfin · Pi-hole · Tailscale</li>
+          <li><span>→ printer:</span> Ender 3 V3 SE — enclosures, brackets, prototypes</li>
+          <li><span>→ eyes:</span> DJI Mini 4K — aerial imaging, learning the tech</li>
         </ul>
-        <div class="stack-row" id="stackRow"></div>
-        <div class="hero-stats" id="aboutStats" style="margin:0 20px 20px;border-radius:12px"></div>
       </div>
       <div class="panel log-card reveal in">
-        <div class="panel-bar"><span>● ● ●</span><span>~/changelog.log</span><span id="logCount"></span></div>
-        <div id="changelog" class="changelog"></div>
-        <div class="sysbox">
-          <div>RENDER <b>ASCII</b></div>
-          <div>PAGES <b>6</b></div>
-          <div>THEME <b id="sysTheme">DARK</b></div>
+        <div class="panel-bar"><span>● ● ●</span><span>~/homelab.txt</span></div>
+        <div class="changelog" style="max-height:none">
+          <div class="cl-row"><time>core</time><span>TrueNAS SCALE server · NUC + Raspberry Pi · Deco mesh</span></div>
+          <div class="cl-row"><time>runs</time><span>Nextcloud · Immich · Jellyfin · Pi-hole · n8n · Tailscale · Uptime Kuma</span></div>
+          <div class="cl-row"><time>rule</time><span>rented apartment, no cabling — learn within constraints</span></div>
         </div>
       </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="sec-index">open questions — from r/esp32 threads</div>
+        <h2 class="sec-title" style="font-size:clamp(22px,3.5vw,30px)">FIGURING<span class="accent">_OUT</span></h2>
+      </div>
+    </div>
+    <div class="posts">
+      <article class="post reveal"><span class="post-date">safety</span><h3>Who is on site, right now?</h3><p>Attendance logs the past. A fire register needs the present — who's inside at this second.</p></article>
+      <article class="post reveal"><span class="post-date">friction</span><h3>BLE instead of tapping?</h3><p>Passive detection kills the tap ritual. Open problem: accuracy vs. privacy vs. battery.</p></article>
+      <article class="post reveal"><span class="post-date">scale</span><h3>SD card → MQTT → LoRa?</h3><p>Standalone SD was the right prototype. Bigger sites want a local server; multi-vehicle wants LoRa.</p></article>
     </div>
   </section>
   <footer class="footer">
@@ -95,8 +103,8 @@
   <a href="index.html">▓ home</a>
   <a href="projects.html">≡ projects</a>
   <a href="blog.html">✎ log</a>
-  <a href="lab.html">◈ lab</a>
-  <a href="about.html" class="active">◐ about</a>
+  <a href="lab.html" class="active">◈ lab</a>
+  <a href="about.html">◐ about</a>
 </nav>
 <div id="toast" class="toast" role="status"></div>
 <script src="site.js"></script>

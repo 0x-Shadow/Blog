@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0b" />
-<title>notes — 0x-shadow.log</title>
-<meta name="description" content="Build logs and notes by 0x-Shadow. Short, no fluff." />
-<meta property="og:title" content="notes — 0x-shadow.log" />
-<meta property="og:description" content="Build logs and notes by 0x-Shadow. Short, no fluff." />
+<title>build log — 0x-shadow.log</title>
+<meta name="description" content="Things I built, broke, fixed, and learned. By 0x-Shadow." />
+<meta property="og:title" content="build log — 0x-shadow.log" />
+<meta property="og:description" content="Things I built, broke, fixed, and learned. By 0x-Shadow." />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="og:image" content="https://0x-shadow.github.io/Blog/shots/crewtrack.jpg" />
@@ -23,7 +23,7 @@
   <div class="statusbar-inner">
     <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
     <span class="status-user">0x-shadow@dev:~$</span>
-    <span class="status-cmd">./notes</span>
+    <span class="status-cmd">./build-log</span>
     <span class="status-right"><span id="clock">00:00:00</span> · <span class="ok">● ONLINE</span></span>
   </div>
 </div>
@@ -33,7 +33,8 @@
     <nav class="nav-links" aria-label="primary">
       <a href="index.html">home</a>
       <a href="projects.html">projects</a>
-      <a href="blog.html" class="active">notes</a>
+      <a href="blog.html" class="active">log</a>
+      <a href="lab.html">lab</a>
       <a href="about.html">about</a>
     </nav>
     <div class="nav-actions">
@@ -45,22 +46,23 @@
   <div id="mobileMenu" class="mobile-menu">
     <a href="index.html">→ home</a>
     <a href="projects.html">→ projects</a>
-    <a href="blog.html">→ notes</a>
+    <a href="blog.html">→ log</a>
+    <a href="lab.html">→ lab</a>
     <a href="about.html">→ about</a>
   </div>
 </header>
 <main id="top">
   <section class="section">
-    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>notes</span></div>
+    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>build log</span></div>
     <div class="section-head reveal in">
       <div>
-        <div class="sec-index">[02] ./notes</div>
-        <h2 class="sec-title">FIELD<span class="accent">_NOTES</span></h2>
-        <p class="sec-sub">Build logs. Short, no fluff.</p>
+        <div class="sec-index">[02] ./build-log</div>
+        <h2 class="sec-title">BUILD<span class="accent">_LOG</span></h2>
+        <p class="sec-sub">Things I built, broke, fixed, and learned.</p>
       </div>
     </div>
     <div class="controls" style="border:1px solid var(--line2);border-radius:12px;margin-bottom:12px">
-      <label class="field grow"><span>⌕</span><input id="postSearch" placeholder="filter notes…" autocomplete="off" enterkeyhint="search" /></label>
+      <label class="field grow"><span>⌕</span><input id="postSearch" placeholder="filter the log…" autocomplete="off" enterkeyhint="search" /></label>
       <a href="feed.xml" class="btn btn-ghost btn-sm">RSS ⌁</a>
     </div>
     <div id="postsList" class="posts"></div>
@@ -74,7 +76,8 @@
 <nav class="tabbar" aria-label="mobile">
   <a href="index.html">▓ home</a>
   <a href="projects.html">≡ projects</a>
-  <a href="blog.html" class="active">✎ notes</a>
+  <a href="blog.html" class="active">✎ log</a>
+  <a href="lab.html">◈ lab</a>
   <a href="about.html">◐ about</a>
 </nav>
 <div id="toast" class="toast" role="status"></div>

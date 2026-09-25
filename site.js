@@ -75,10 +75,10 @@ const POSTS = [
 ];
 const STACK = ["JavaScript", "TypeScript", "Python", "C++", "ESP32", "HTML", "Linux", "Git"];
 const LOG = [
+  ["2026.09.24", "<b>lab page</b> + build log + DNA cards go live"],
   ["2026.09.24", "hero goes <b>full-bleed ASCII sky</b>, terminal proven"],
   ["2026.09.24", "reader <b>pro pass</b>: copy-code, zoom, history"],
   ["2026.09.24", "portfolio curated: <b>starred first</b>, weak entries out"],
-  ["2026.09.24", "notes <b>search</b> + native <b>share</b> + RSS buttons"],
   ["2026.09.24", "new note: <b>SnapTap</b> capture tool"],
   ["2026.09.24", "rescued <b>screenshots</b> → project banners + OG"],
   ["2026.09.24", "readme pages <b>v2</b>: TOC, tables, hire strip"],
@@ -502,9 +502,10 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
     log.scrollTop = log.scrollHeight;
   };
   const CMDS = {
-    help: () => `try: <b>projects</b> · <b>notes</b> · <b>whoami</b> · <b>ascii</b> · <b>hire</b> · <b>rss</b> · <b>stats</b> · <b>theme</b> · <b>clear</b>`,
+    help: () => `try: <b>projects</b> · <b>log</b> · <b>whoami</b> · <b>ascii</b> · <b>hire</b> · <b>rss</b> · <b>stats</b> · <b>theme</b> · <b>clear</b>`,
     projects: () => `${allRepos.length} builds indexed. hottest: <a href="project.html?owner=0x-Shadow&repo=CrewTrack">CrewTrack</a> (ESP32, ▲80). <a href="projects.html">see all →</a>`,
-    notes: () => `${POSTS.length} field notes. latest: <a href="post.html?id=${esc(POSTS[0].id)}">${esc(POSTS[0].title)}</a>. <a href="blog.html">read all →</a>`,
+    notes: () => `${POSTS.length} build logs. latest: <a href="post.html?id=${esc(POSTS[0].id)}">${esc(POSTS[0].title)}</a>. <a href="blog.html">read all →</a>`,
+    log: () => `${POSTS.length} build logs. latest: <a href="post.html?id=${esc(POSTS[0].id)}">${esc(POSTS[0].title)}</a>. <a href="blog.html">read all →</a>`,
     whoami: () => `0x-Shadow — student builder, Greece. ESP32 · web · homelab. <a href="about.html">full story →</a>`,
     rss: () => `fresh notes, no algorithm: <a href="feed.xml">feed.xml ⌁</a>`,
     ascii: () => {
@@ -572,10 +573,13 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   if (hp) hp.innerHTML = POSTS.slice(0, 2).map(postCard).join("");
   bindReveals(hp);
 })();
+function postNo(p) {
+  return String(POSTS.length - POSTS.indexOf(p)).padStart(2, "0");
+}
 function postCard(p) {
   return `
   <a class="post reveal" href="post.html?id=${esc(p.id)}">
-    <span class="post-date">${esc(p.date)} · ${esc(p.tag)}</span>
+    <span class="post-date">#${postNo(p)} · ${esc(p.date)} · ${esc(p.tag)}</span>
     <h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p>
     <div class="post-foot"><span>◷ ${esc(p.read)}</span><span>READ →</span></div>
   </a>`;
@@ -664,6 +668,29 @@ const PROJECT_SHOTS = {
   ClipTap: "shots/cliptap-master.png",
   SnapTap: "shots/snaptap.png",
 };
+/* repo → platform (shown in the DNA strip; keep to verified facts) */
+const PROJECT_META = {
+  CrewTrack: { platform: "ESP32" },
+  ClipTap: { platform: "Windows" },
+  SnapTap: { platform: "Web" },
+  "Code-Mate": { platform: "Web" },
+  "Intelligent-Film-Production-Search": { platform: "Python" },
+  PassStrengthAnalyzer: { platform: "Python" },
+};
+/* repo → verified build story (PROBLEM → RESULT). Only what I can prove. */
+const RELATED_STORY = {
+  CrewTrack: [
+    ["PROBLEM", "Every month ended the same way in my father's electrical business: who worked where, and when? Memory, chat messages, old notes."],
+    ["IDEA", "A €15 box in the van. Worker taps an RFID card each morning — attendance records itself."],
+    ["BUILD", "ESP32 DevKit + RC522 reader + 2-inch ST7789 display + buzzer + microSD with CSV logs. Own WiFi network, local phone dashboard, no internet needed."],
+    ["RESULT", "▲80 with 55K views on r/esp32. Offline, no cloud, no fees — and a roadmap written by its own users."],
+  ],
+};
+function repoStatus(updated_at) {
+  const ms = Date.parse(updated_at);
+  if (Number.isNaN(ms)) return "STABLE";
+  return Date.now() - ms < 120 * 864e5 ? "ACTIVE" : "STABLE";
+}
 function slugify(s) {
   return String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "s";
 }
@@ -783,6 +810,26 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
     }
     const topics = cleanTopics(meta.topics);
     $("projectTopics").innerHTML = topics.map(t => `<span class="topic">#${esc(t)}</span>`).join("");
+    const dna = $("dnaRow");
+    if (dna) {
+      const platform = (PROJECT_META[meta.name] || {}).platform || meta.language || "—";
+      const cell = (k, v) => `<div><span>${k}</span><b>${v}</b></div>`;
+      dna.innerHTML =
+        cell("LANG", esc(meta.language || "—")) +
+        cell("PLATFORM", esc(platform)) +
+        cell("STATUS", esc(repoStatus(meta.updated_at))) +
+        cell("UPDATED", esc(timeAgo(meta.updated_at))) +
+        cell("LICENSE", esc(meta.license || "—"));
+    }
+    const story = RELATED_STORY[meta.name];
+    const storyBox = $("storyBox");
+    if (storyBox) {
+      if (story) {
+        storyBox.style.display = "";
+        storyBox.innerHTML = `<div class="story-kicker">BUILD OVERVIEW — 20 seconds</div>` +
+          story.map(([k, v]) => `<div class="story-row"><span>${esc(k)}</span><p>${esc(v)}</p></div>`).join("");
+      } else storyBox.style.display = "none";
+    }
     const banner = $("projectBanner");
     const bannerLink = $("bannerLink");
     if (banner) {
@@ -849,7 +896,7 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
   const pmd = document.querySelector('meta[name="description"]');
   if (pmd) pmd.content = p.excerpt.slice(0, 160);
   $("postTitle").textContent = p.title;
-  $("postMeta").textContent = `${p.date} · ${p.tag} · ${p.read}`;
+  $("postMeta").textContent = `BUILD LOG #${postNo(p)} · ${p.date} · ${p.tag} · ${p.read}`;
   $("postBody").innerHTML = p.body.map(par => `<p>${esc(par)}</p>`).join("");
   const i = POSTS.indexOf(p);
   const prev = POSTS[(i - 1 + POSTS.length) % POSTS.length];
@@ -863,6 +910,7 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
 /* ── page: ABOUT ── */
 (function aboutPage() {
   if ($("stackRow")) $("stackRow").innerHTML = STACK.map(s => `<span class="stack">#${esc(s)}</span>`).join("");
+  if ($("benchRow")) $("benchRow").innerHTML = ["ESP32 DevKit", "RC522 RFID", "ST7789 2in TFT", "microSD module", "Active buzzer 5V", "Raspberry Pi", "NUC", "Ender 3 V3 SE"].map(s => `<span class="stack">#${esc(s)}</span>`).join("");
   if ($("changelog")) {
     $("changelog").innerHTML = LOG.map(([d, m]) => {
       const safe = esc(m).replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g, "<b>$1</b>");

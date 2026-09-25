@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-<title>0x-shadow.log — notes</title>
+<title>0x-shadow.log — build log</title>
 <link>https://0x-shadow.github.io/Blog/blog.html</link>
-<description>Build logs by 0x-Shadow. Short, no fluff.</description>
+<description>Things I built, broke, fixed, and learned.</description>
 <language>en</language>
 <item>
 <title>SnapTap: snap, save, share</title>
