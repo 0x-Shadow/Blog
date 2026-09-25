@@ -790,10 +790,17 @@ document.querySelectorAll("[data-share]").forEach(b => b.addEventListener("click
     const topics = cleanTopics(meta.topics);
     $("projectTopics").innerHTML = topics.map(t => `<span class="topic">#${esc(t)}</span>`).join("");
     const banner = $("projectBanner");
+    const bannerLink = $("bannerLink");
     if (banner) {
       const shot = PROJECT_SHOTS[meta.name];
-      if (shot) { banner.src = shot; banner.alt = `${meta.name} screenshot`; banner.style.display = ""; }
-      else banner.style.display = "none";
+      if (shot) {
+        banner.src = shot; banner.alt = `${meta.name} screenshot`;
+        banner.style.display = "";
+        if (bannerLink) { bannerLink.href = shot; bannerLink.style.display = ""; }
+      } else {
+        banner.style.display = "none";
+        if (bannerLink) bannerLink.style.display = "none";
+      }
     }
     try {
       $("readmeBody").innerHTML = await fetchReadme(owner, meta.name, meta.default_branch);
