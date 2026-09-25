@@ -433,6 +433,7 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   const ctx = cv.getContext("2d");
   const off = document.createElement("canvas"); off.width = W; off.height = H;
   const o = off.getContext("2d");
+  if (!ctx || !o) return;
   let mx = -999, my = -999, t = 0, visible = true;
   new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
   const zone = hero || cv;
@@ -469,10 +470,16 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
     ctx.drawImage(off, 0, 0);
   }
   frame();
-  if (!reduceMotion) (function loop() {
-    if (visible && !document.hidden && cv.offsetParent !== null) frame();
+  /* phones get ~12fps sky: same look, fraction of the CPU/battery */
+  const budget = small ? 80 : 33;
+  let last = 0;
+  if (!reduceMotion) (function loop(now) {
     requestAnimationFrame(loop);
-  })();
+    if (!visible || document.hidden || cv.offsetParent === null) return;
+    if (now - last < budget) return;
+    last = now;
+    frame();
+  })(0);
   /* smooth fade + drift while scrolling away */
   let ticking = false;
   const fade = () => {
