@@ -551,23 +551,21 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
 /* ── page: HOME preview ── */
 (function homePreview() {
   const grid = $("homeGrid"); if (!grid) return;
-  const top = [...allRepos].sort((a, b) =>
+  const top3 = (repos) => [...repos].sort((a, b) =>
     ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)) || b.stargazers_count - a.stargazers_count).slice(0, 3);
-  grid.innerHTML = top.map((r, i) => projectCard(r, i, currentOwner)).join("");
-  bindReveals(grid);
-  getRepos(currentOwner).then(repos => {
-    allRepos = repos;
-    const t = [...repos].sort((a, b) =>
-      ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)) || b.stargazers_count - a.stargazers_count).slice(0, 3);
-    grid.innerHTML = t.map((r, i) => projectCard(r, i, currentOwner)).join("");
+  const paint = (repos) => {
+    grid.innerHTML = top3(repos).map((r, i) => projectCard(r, i, currentOwner)).join("");
     bindReveals(grid);
     if ($("statRepos")) $("statRepos").textContent = repos.length;
     if ($("statStars")) $("statStars").textContent = repos.reduce((s, r) => s + r.stargazers_count, 0);
     if ($("statLangs")) $("statLangs").textContent = new Set(repos.map(r => r.language).filter(Boolean)).size;
+  };
+  grid.innerHTML = `<div class="skel"></div><div class="skel"></div><div class="skel"></div>`;
+  getRepos(currentOwner).then(repos => {
+    allRepos = repos;
+    paint(repos);
   }).catch(() => {
-    if ($("statRepos")) $("statRepos").textContent = allRepos.length;
-    if ($("statStars")) $("statStars").textContent = allRepos.reduce((s, r) => s + r.stargazers_count, 0);
-    if ($("statLangs")) $("statLangs").textContent = new Set(allRepos.map(r => r.language).filter(Boolean)).size;
+    paint(allRepos);
   });
   const hp = $("homePosts");
   if (hp) hp.innerHTML = POSTS.slice(0, 2).map(postCard).join("");
@@ -616,7 +614,6 @@ function postCard(p) {
   ["searchInput", "sortSel", "langSel"].forEach(id => $(id).addEventListener("input", render));
   const st = $("apiStatus");
   loadProfile(owner);
-  render();
   getRepos(owner).then(repos => {
     allRepos = repos;
     st.textContent = `● LIVE @${owner}`; st.classList.add("live");
