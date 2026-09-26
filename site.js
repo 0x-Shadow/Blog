@@ -402,19 +402,8 @@ function projectCard(r, i, owner) {
 }
 
 /* ── HOME ── */
-if ($("typewriter")) {
-  const LINES = ["fetching @0x-Shadow repos…", "CrewTrack: ▲80 on r/esp32", "tap a card → full README"];
-  if (reduceMotion) $("typewriter").textContent = LINES[0];
-  else (async function loop() {
-    const el = $("typewriter"); let li = 0;
-    while (el.isConnected) {
-      const line = LINES[li++ % LINES.length];
-      for (let i = 1; i <= line.length; i++) { el.textContent = line.slice(0, i); await new Promise(r => setTimeout(r, 34)); }
-      await new Promise(r => setTimeout(r, 1500));
-      for (let i = line.length; i >= 0; i--) { el.textContent = line.slice(0, i); await new Promise(r => setTimeout(r, 12)); }
-    }
-  })();
-}
+/* typewriter retired: text is static in HTML. Any JS re-typing would restart
+   the animation on cached pages, so leave #typewriter untouched. */
 if ($("marquee")) $("marquee").textContent = " OPEN_SOURCE ✳ SHIP_IN_PUBLIC ✳ MONO_FOREVER ✳ .:-=+*#%@ ✳ TAP_A_CARD_FOR_README ✳".repeat(6);
 if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   const pg = $("playground");

@@ -92,8 +92,7 @@ img{max-width:100%}
 .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--ink)}
 .hero-sub{font-family:var(--mono);font-size:14px;margin:18px 0 10px;min-height:26px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-sub .prompt{color:var(--accent)}
-.caret{animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
+.caret{opacity:1}
 .hero-desc{color:var(--dim);font-size:15.5px;max-width:44ch}
 .hero-desc b{color:var(--ink)}
 .hero-cta{display:flex;gap:10px;margin:22px 0;flex-wrap:wrap}
@@ -105,8 +104,7 @@ img{max-width:100%}
 
 /* ascii sky canvas */
 #asciiCanvas{touch-action:pan-y}
-.scroll-cue{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--dim);animation:cueFloat 2.4s ease-in-out infinite}
-@keyframes cueFloat{50%{transform:translate(-50%,5px)}}
+.scroll-cue{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--dim)}
 /* (windowed + image-ascii styles removed in v3.6 — hero is a full-bleed sky now) */
 
 /* marquee */
@@ -375,7 +373,7 @@ a.card,a.post{text-decoration:none;color:inherit}
   .grid,.posts{grid-template-columns:1fr}
   .card,.skel{border-right:none!important}
   .hero-title{letter-spacing:-2px}
-  .hero-sub{white-space:normal;min-height:44px}
+  .hero-sub{white-space:nowrap;min-height:26px;overflow:hidden;text-overflow:ellipsis}
   .profile-strip{gap:10px;padding:12px}
   .profile-avatar{width:44px;height:44px}
   .profile-stats{width:100%}
