@@ -22,6 +22,17 @@ const DEMO_PROJECTS = [
    3. Write 2-4 short paragraphs in body. 4. Push — done. Newest first. */
 const POSTS = [
   {
+    id: "circles-private-photo-sharing", date: "2026.09.26", read: "4 min", tag: "build-log",
+    title: "Circles: an Instagram rebuild with a reason to exist",
+    excerpt: "Feed, stories, reels, DMs — pivoted to private circles. Glass nav, dark mode that works, screenshots to prove it.",
+    body: [
+      "The repo started as another Instagram clone: feed, stories, reels, DMs, search — all local, no backend, no reason to exist. Cloning Instagram feature-for-feature is a dead end, so I pivoted it into Circles: small-group photo sharing for family, friends and photo walks. No algorithm, on-device first.",
+      "The UI got the full treatment: floating glass tab bar with real blur, a spring-animated circle switcher in the middle of the feed, full-screen reels with a glass action rail, notes with attachable songs, DMs with unread badges and filters, and a dark mode where every letter actually shows — audited color by color, all 24 stray labels fixed.",
+      "Verification was screenshots, not vibes: web export plus headless Chrome shot every tab in light and dark, twice, and each loop fixed what the pixels showed. tsc clean, 15/15 checks green, fresh screenshots committed next to the code.",
+      "Next, only if it earns it: the persistence layer already abstracts storage, so Supabase auth, buckets and realtime can slot in behind the same interface. Until then it stays fast, offline and honest.",
+    ],
+  },
+  {
     id: "snaptap-capture-tool", date: "2026.09.24", read: "3 min", tag: "build-log",
     title: "SnapTap: snap, save, share",
     excerpt: "A lightweight capture tool with a live demo. Small, fast, MIT.",
@@ -650,6 +661,7 @@ async function loadProfile(username) {
 
 /* repo → build-log post (powers the BUILD_LOG button on project pages) */
 const RELATED_POST = {
+  "instagram-clone": "circles-private-photo-sharing",
   CrewTrack: "crewtrack-esp32-terminal",
   ClipTap: "cliptap-clipboard-that-stays-open",
   SnapTap: "snaptap-capture-tool",
@@ -657,12 +669,14 @@ const RELATED_POST = {
 };
 /* repo → rescued screenshot (powers the banner on project pages) */
 const PROJECT_SHOTS = {
+  "instagram-clone": "shots/circles-feed.png",
   CrewTrack: "shots/crewtrack.jpg",
   ClipTap: "shots/cliptap-master.png",
   SnapTap: "shots/snaptap.png",
 };
 /* repo → platform (shown in the DNA strip; keep to verified facts) */
 const PROJECT_META = {
+  "instagram-clone": { platform: "Expo" },
   CrewTrack: { platform: "ESP32" },
   ClipTap: { platform: "Windows" },
   SnapTap: { platform: "Web" },
@@ -672,6 +686,12 @@ const PROJECT_META = {
 };
 /* repo → verified build story (PROBLEM → RESULT). Only what I can prove. */
 const RELATED_STORY = {
+  "instagram-clone": [
+    ["PROBLEM", "A local-first Instagram rebuild with feed, stories, reels and DMs — and no reason to exist. Cloning Instagram is a dead end."],
+    ["IDEA", "Pivot to private circles: small-group sharing for family, friends, photo walks. No algorithm, on-device first."],
+    ["BUILD", "Expo SDK 57: floating glass tab bar, spring circle switcher, full-screen reels, notes with songs, badge-count DMs, audited dark mode. Verified with headless screenshot loops, light + dark."],
+    ["RESULT", "tsc clean, 15/15 harness green, fresh screenshots in-repo. Small, fast, MIT."],
+  ],
   CrewTrack: [
     ["PROBLEM", "Every month ended the same way in my father's electrical business: who worked where, and when? Memory, chat messages, old notes."],
     ["IDEA", "A €15 box in the van. Worker taps an RFID card each morning — attendance records itself."],

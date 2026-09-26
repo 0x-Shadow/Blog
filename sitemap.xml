@@ -6,6 +6,8 @@
   <url><loc>https://0x-shadow.github.io/Blog/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://0x-shadow.github.io/Blog/lab.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://0x-shadow.github.io/Blog/project.html?owner=0x-Shadow&amp;repo=CrewTrack</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/project.html?owner=0x-Shadow&amp;repo=instagram-clone</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://0x-shadow.github.io/Blog/post.html?id=circles-private-photo-sharing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://0x-shadow.github.io/Blog/post.html?id=snaptap-capture-tool</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://0x-shadow.github.io/Blog/post.html?id=cliptap-clipboard-that-stays-open</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://0x-shadow.github.io/Blog/post.html?id=crewtrack-esp32-terminal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
