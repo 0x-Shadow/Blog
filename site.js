@@ -461,25 +461,21 @@ function projectCard(r, i, owner) {
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
   const lines = [
-    "ESP32 · web · tools · homelab",
+    "ESP32 · web · tools",
     "CrewTrack — ▲80 on r/esp32",
-    "offline-first · no cloud · no fees",
-    "true type / relative / lf",
+    "offline-first · no cloud",
   ];
-  let li = 0, ci = 0, deleting = false;
   if (reduceMotion) { el.textContent = lines[0]; return; }
+  /* types each line once, forwards only, then rests on the last.
+     No delete + no loop => nothing repeats under the reader's eyes. */
+  let li = 0, ci = 0;
   (function tick() {
+    if (li >= lines.length) return;
     const line = lines[li];
-    if (!deleting) {
-      ci++;
-      el.textContent = line.slice(0, ci);
-      if (ci === line.length) { deleting = true; return setTimeout(tick, 3200); }
-      return setTimeout(tick, 105);
-    }
-    ci -= 2;
-    el.textContent = line.slice(0, Math.max(0, ci));
-    if (ci <= 0) { deleting = false; ci = 0; li = (li + 1) % lines.length; return setTimeout(tick, 700); }
-    setTimeout(tick, 34);
+    ci++;
+    el.textContent = line.slice(0, ci);
+    if (ci === line.length) { li++; ci = 0; return setTimeout(tick, 900); }
+    setTimeout(tick, 85);
   })();
 })();
 (function cursorGlow() {
