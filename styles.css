@@ -82,6 +82,8 @@ img{max-width:100%}
 .hero{border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .hero-ascii{position:absolute;inset:0;z-index:0}
 .hero-ascii canvas{width:100%;height:100%;display:block}
+.ascii-rain{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
 .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 80% 70% at 35% 45%,color-mix(in srgb,var(--bg) 82%,transparent),color-mix(in srgb,var(--bg) 95%,transparent)),
   linear-gradient(to bottom,color-mix(in srgb,var(--bg) 70%,transparent),color-mix(in srgb,var(--bg) 96%,transparent) 85%)}

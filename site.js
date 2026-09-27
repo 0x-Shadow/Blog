@@ -323,8 +323,9 @@ if ($("themeBtn")) $("themeBtn").addEventListener("click", () => {
   try { localStorage.setItem("shadow-theme", h.dataset.theme); } catch {}
   syncThemeLabel(); toast("theme: " + h.dataset.theme);
 });
-syncThemeLabel();
-if ($("menuBtn")) $("menuBtn").addEventListener("click", () => {
+  syncThemeLabel();
+  startAsciiRain();
+  if ($("menuBtn")) $("menuBtn").addEventListener("click", () => {
   const m = $("mobileMenu"), open = m.classList.toggle("open");
   $("menuBtn").setAttribute("aria-expanded", String(open));
 });
@@ -432,10 +433,57 @@ function projectCard(r, i, owner) {
 }
 
 /* ── HOME ── */
+function startAsciiRain() {
+  const layers = document.querySelectorAll(".ascii-rain");
+  layers.forEach((layer, li) => {
+    if (li > 2) return;
+    const w = layer.clientWidth || 1280;
+    const h = layer.clientHeight || 600;
+    const cv = document.createElement("canvas");
+    cv.width = w; cv.height = h;
+    cv.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none";
+    layer.appendChild(cv);
+    const cx = cv.getContext("2d");
+    if (!cx) return;
+    const fs = [10, 12, 14][li];
+    const col = Math.ceil(w / fs);
+    const drops = Array.from({ length: col }, () => ({
+      y: Math.random() * -h,
+      sp: 0.5 + Math.random() * 1.5 + li * 0.3,
+      chars: Array.from({ length: 30 }, () => " .:-=+*#%@"[Math.floor(Math.random() * 10)])
+    }));
+    layer._cleanup = () => cv.remove();
+    function drawRain() {
+      if (reduceMotion) return;
+      cx.clearRect(0, 0, w, h);
+      cx.font = `${fs}px "JetBrains Mono", monospace`;
+      drops.forEach((d, i) => {
+        d.y += d.sp;
+        if (d.y * fs > h + 400) { d.y = Math.random() * -200; d.sp = 0.5 + Math.random() * 1.5; }
+        d.chars.forEach((c, j) => {
+          const y = (d.y - j) * fs;
+          if (y < -fs || y > h + fs) return;
+          const a = 1 - j / d.chars.length;
+          cx.fillStyle = j === 0 ? `rgba(255,255,255,${a * (0.5 + li * 0.2)})` : `rgba(215,255,62,${a * (0.35 - li * 0.08)})`;
+          cx.fillText(c, i * fs, y);
+        });
+      });
+      layer._raf = requestAnimationFrame(drawRain);
+    }
+    drawRain();
+  });
+}
+function stopAsciiRain() {
+  document.querySelectorAll(".ascii-rain").forEach(l => {
+    if (l._raf) cancelAnimationFrame(l._raf);
+    if (l._cleanup) l._cleanup();
+  });
+}
+addEventListener("beforeunload", stopAsciiRain);
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
   const lines = [
-    "fetching @0x-Shadow repos…",
+    "initializing 0x-Shadow…",
     "ESP32 · web · tools · homelab",
     "CrewTrack — ▲80 on r/esp32",
     "shipping in public since 2026"
