@@ -294,11 +294,20 @@ function toast(msg) {
   t.classList.add("show");
   clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200);
 }
+const animated = new Set();
 const io = new IntersectionObserver((es) => {
-  for (const e of es) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-}, { threshold: 0.08, rootMargin: "0px 0px -5% 0px" });
+  for (const e of es) {
+    if (e.isIntersecting && !animated.has(e.target)) {
+      animated.add(e.target);
+      e.target.classList.add("in");
+      io.unobserve(e.target);
+    }
+  }
+}, { threshold: 0.05, rootMargin: "0px 0px -2% 0px" });
 function bindReveals(scope) {
-  (scope || document).querySelectorAll(".reveal:not(.in)").forEach(el => io.observe(el));
+  (scope || document).querySelectorAll(".reveal:not(.in)").forEach(el => {
+    if (!animated.has(el)) io.observe(el);
+  });
 }
 try {
   const saved = localStorage.getItem("shadow-theme");
@@ -485,7 +494,7 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   const hero = cv.closest(".hero");
   const cue = document.querySelector(".scroll-cue");
   const small = matchMedia("(max-width: 560px)").matches;
-  const COLS = small ? 46 : 78, ROWS = small ? 38 : 48;
+  const COLS = small ? 28 : 52, ROWS = small ? 22 : 34;
   const W = cv.width, H = cv.height, RAMP = " .:-=+*#%@";
   const cw = W / COLS, ch = H / ROWS;
   const ctx = cv.getContext("2d");
@@ -510,13 +519,14 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   }
   function field(x, y) {
     const nx = x / W - 0.5, ny = y / H - 0.5;
-    let v = Math.sin(nx * 9 + t * 1.4) * Math.cos(ny * 7 - t) * 0.5 + 0.5;
-    v += Math.sin((nx + ny) * 14 + t * 2) * 0.12;
-    if (x > W / 2) v = Math.floor(v * 5) / 5 + (((x / 18 | 0) + (y / 18 | 0)) % 2 ? -0.06 : 0.06);
-    else { const d = Math.hypot(nx + 0.22, ny); v += Math.max(0, 0.35 - d) * 1.2; }
+    let v = Math.sin(nx * 6 + t * 1.2) * Math.cos(ny * 5 - t * 0.8) * 0.5 + 0.5;
+    v += Math.sin((nx + ny) * 10 + t * 1.5) * 0.15;
+    v += Math.sin(nx * 3 - t * 0.6) * 0.1;
+    if (x > W / 2) v = Math.floor(v * 4) / 4 + (((x / 24 | 0) + (y / 24 | 0)) % 2 ? -0.08 : 0.08);
+    else { const d = Math.hypot(nx + 0.22, ny); v += Math.max(0, 0.4 - d) * 1.5; }
     const md = Math.hypot(x - mx, y - my);
-    if (md < 130) v += (1 - md / 130) * 0.55 * Math.sin(t * 6);
-    if (Math.abs(x - W / 2) < 2) v = 0.95;
+    if (md < 150) v += (1 - md / 150) * 0.7 * Math.sin(t * 5);
+    if (Math.abs(x - W / 2) < 3) v = 0.95;
     return Math.min(1, Math.max(0, v));
   }
   function frame() {
