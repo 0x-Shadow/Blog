@@ -82,7 +82,7 @@ img{max-width:100%}
 .hero{border-bottom:1px solid var(--line);position:relative;overflow:hidden;
   min-height:100dvh;display:flex;flex-direction:column}
 .hero-ascii{position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:url('shots/background.gif') center center / cover no-repeat;
+  background:url('shots/background.gif') center center / 100% auto no-repeat;
   opacity:.7;filter:contrast(1.2) brightness(.9)}
 .hero-ascii::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(ellipse 55% 80% at 100% 50%,rgba(215,255,62,.06),transparent 70%)}
