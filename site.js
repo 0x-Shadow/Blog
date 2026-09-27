@@ -423,15 +423,63 @@ function projectCard(r, i, owner) {
 }
 
 /* ── HOME ── */
-/* typewriter retired: text is static in HTML. Any JS re-typing would restart
-   the animation on cached pages, so leave #typewriter untouched. */
+(function typewriter() {
+  const el = $("typewriter"); if (!el) return;
+  const lines = [
+    "fetching @0x-Shadow repos…",
+    "ESP32 · web · tools · homelab",
+    "CrewTrack — ▲80 on r/esp32",
+    "shipping in public since 2026"
+  ];
+  let li = 0, ci = 0, deleting = false;
+  if (reduceMotion) { el.textContent = lines[0]; return; }
+  (function tick() {
+    const line = lines[li];
+    if (!deleting) {
+      ci++;
+      el.textContent = line.slice(0, ci);
+      if (ci === line.length) { deleting = true; return setTimeout(tick, 2000); }
+      setTimeout(tick, 45 + Math.random() * 40);
+    } else {
+      ci--;
+      el.textContent = line.slice(0, ci);
+      if (ci === 0) { deleting = false; li = (li + 1) % lines.length; return setTimeout(tick, 400); }
+      setTimeout(tick, 20);
+    }
+  })();
+})();
+(function cursorGlow() {
+  if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
+  const glow = document.createElement("div");
+  glow.style.cssText = "position:fixed;width:300px;height:300px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(215,255,62,.07) 0%,transparent 70%);transform:translate(-50%,-50%);transition:opacity .3s";
+  document.body.appendChild(glow);
+  let tx = -500, ty = -500, cx = -500, cy = -500;
+  addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+  (function anim() {
+    cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+    glow.style.left = cx + "px"; glow.style.top = cy + "px";
+    requestAnimationFrame(anim);
+  })();
+})();
+(function cardTilt() {
+  if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
+  document.querySelectorAll(".card, .post").forEach(card => {
+    card.addEventListener("pointermove", e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      card.style.transform = `translateY(-3px) perspective(800px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+    }, { passive: true });
+    card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+  });
+})();
 if ($("marquee")) $("marquee").textContent = " OPEN_SOURCE ✳ SHIP_IN_PUBLIC ✳ MONO_FOREVER ✳ .:-=+*#%@ ✳ TAP_A_CARD_FOR_README ✳".repeat(6);
 if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   const pg = $("playground");
   if (pg) pg.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 });
 
-/* ASCII hero sky (home only): full-bleed field, fades out on scroll */
+/* ASCII hero sky (home only): full-bleed field, particles, shooting stars, fades on scroll */
 (function asciiHero() {
   const cv = $("asciiCanvas"); if (!cv) return;
   const hero = cv.closest(".hero");
@@ -452,6 +500,14 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
     mx = (e.clientX - r.left) / r.width * W; my = (e.clientY - r.top) / r.height * H;
   }, { passive: true });
   zone.addEventListener("pointerleave", () => { mx = my = -999; });
+  const particles = [];
+  const stars = [];
+  for (let i = 0; i < (small ? 30 : 60); i++) {
+    particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, life: Math.random() * 200 + 100, maxLife: 300, char: RAMP[Math.floor(Math.random() * RAMP.length)] });
+  }
+  for (let i = 0; i < (small ? 5 : 12); i++) {
+    stars.push({ x: Math.random() * W, y: Math.random() * H * .6, len: Math.random() * 40 + 20, speed: Math.random() * 3 + 2, angle: Math.PI / 4 + (Math.random() - .5) * .3, life: Math.random() * 100 + 50, maxLife: 150 });
+  }
   function field(x, y) {
     const nx = x / W - 0.5, ny = y / H - 0.5;
     let v = Math.sin(nx * 9 + t * 1.4) * Math.cos(ny * 7 - t) * 0.5 + 0.5;
@@ -475,12 +531,34 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
       o.fillStyle = split ? "#d7ff3e" : v > 0.86 ? "#fff" : `rgba(200,200,205,${0.35 + v * 0.6})`;
       o.fillText(chr, x + cw * 0.12, y);
     }
+    if (!reduceMotion) {
+      for (const p of particles) {
+        p.x += p.vx; p.y += p.vy; p.life--;
+        if (p.life <= 0 || p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
+          p.x = Math.random() * W; p.y = Math.random() * H; p.vx = (Math.random() - .5) * .3; p.vy = (Math.random() - .5) * .3; p.life = p.maxLife; p.char = RAMP[Math.floor(Math.random() * RAMP.length)];
+        }
+        const alpha = Math.min(1, p.life / 50) * 0.7;
+        o.fillStyle = `rgba(215,255,62,${alpha})`;
+        o.fillText(p.char, p.x, p.y);
+      }
+      for (const s of stars) {
+        s.x += Math.cos(s.angle) * s.speed; s.y += Math.sin(s.angle) * s.speed; s.life--;
+        if (s.life <= 0 || s.x < -50 || s.x > W + 50 || s.y < -50 || s.y > H + 50) {
+          s.x = Math.random() * W; s.y = Math.random() * H * .5; s.len = Math.random() * 40 + 20; s.speed = Math.random() * 3 + 2; s.angle = Math.PI / 4 + (Math.random() - .5) * .3; s.life = s.maxLife;
+        }
+        const alpha = Math.min(1, s.life / 30) * 0.8;
+        const grad = o.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len);
+        grad.addColorStop(0, `rgba(255,255,255,${alpha})`);
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+        o.strokeStyle = grad; o.lineWidth = 1.5;
+        o.beginPath(); o.moveTo(s.x, s.y); o.lineTo(s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len); o.stroke();
+      }
+    }
     o.fillStyle = "#d7ff3e"; o.font = '700 13px "JetBrains Mono", monospace';
     o.fillText("[ HUMAN", 14, 14); o.fillText("ROBOT ]", W - 84, 14);
     ctx.drawImage(off, 0, 0);
   }
   frame();
-  /* phones get ~12fps sky: same look, fraction of the CPU/battery */
   const budget = small ? 80 : 33;
   let last = 0;
   if (!reduceMotion) (function loop(now) {
@@ -490,7 +568,6 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
     last = now;
     frame();
   })(0);
-  /* smooth fade + drift while scrolling away */
   let ticking = false;
   const fade = () => {
     ticking = false;

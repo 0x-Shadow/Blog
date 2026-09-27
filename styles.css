@@ -94,7 +94,8 @@ img{max-width:100%}
 .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--ink)}
 .hero-sub{font-family:var(--mono);font-size:14px;margin:18px 0 10px;min-height:26px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-sub .prompt{color:var(--accent)}
-.caret{opacity:1}
+.caret{opacity:1;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
 .hero-desc{color:var(--dim);font-size:15.5px;max-width:44ch}
 .hero-desc b{color:var(--ink)}
 .hero-cta{display:flex;gap:10px;margin:22px 0;flex-wrap:wrap}
@@ -440,6 +441,22 @@ summary::marker{content:""}
 .toc-box[open] summary::before{content:"▾ "}
 .card:active{transform:scale(.985)}
 .marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-track{transition:transform .3s var(--ease)}
+.sec-title span{display:inline-block;animation:titleSlide .5s var(--ease) both}
+@keyframes titleSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.sec-index{animation:fadeSlide .4s var(--ease) both}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.hero-stats{animation:statsPop .5s var(--ease) .3s both}
+@keyframes statsPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.spot{animation:spotIn .5s var(--ease) both}
+@keyframes spotIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+.hire-card{animation:cardIn .4s var(--ease) both}
+.hire-card:nth-child(2){animation-delay:.08s}
+.hire-card:nth-child(3){animation-delay:.16s}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.statusbar{animation:slideDown .4s var(--ease) both}
+@keyframes slideDown{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:none}}
+.nav{animation:slideDown .4s var(--ease) .1s both}
 .empty a{color:var(--accent)}
 .hero-stats b,.profile-stats b,#clock{font-variant-numeric:tabular-nums}
 .md li.task input{width:15px;height:15px;vertical-align:-2px}
