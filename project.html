@@ -18,6 +18,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
 </head>
 <body>
+<a href="#main-content" class="skip-link">skip to content</a>
 <div id="progress" class="progress"></div>
 <div class="statusbar" role="status">
   <div class="statusbar-inner">
@@ -51,7 +52,7 @@
     <a href="about.html">→ about</a>
   </div>
 </header>
-<main id="top">
+<main id="main-content">
   <section class="section" id="projectRoot">
     <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><a href="projects.html">projects</a><span>/</span><span id="crumbRepo">…</span></div>
 
@@ -62,6 +63,7 @@
       <div id="projectMeta" class="sheet-meta"></div>
       <div id="projectTopics" class="topics" style="margin-top:10px"></div>
       <div id="dnaRow" class="dna-row"></div>
+      <div id="projectStatus" style="margin-top:10px"></div>
       <div class="doc-actions">
         <a id="btnSource" class="btn btn-solid btn-sm" target="_blank" rel="noopener" href="projects.html">SOURCE ↗</a>
         <a id="btnLive" class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="projects.html">LIVE →</a>
@@ -72,6 +74,8 @@
     </div>
 
     <div id="storyBox" class="story-box" style="display:none"></div>
+
+    <div id="decisionsBox" class="story-box" style="display:none"></div>
 
     <div class="reader">
       <aside class="toc-wrap reveal in">
@@ -114,6 +118,6 @@
   <a href="about.html">◐ about</a>
 </nav>
 <div id="toast" class="toast" role="status"></div>
-<script src="site.js?v=3.9.1"></script>
+<script src="site.js?v=4.0.0"></script>
 </body>
 </html>

@@ -107,6 +107,21 @@ const readmeCache = new Map();
 const $ = (id) => document.getElementById(id);
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const params = new URLSearchParams(location.search);
+const CACHE_TTL = 30 * 60 * 1000;
+
+function cacheGet(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const j = JSON.parse(raw);
+      if (j && Date.now() - j.t < CACHE_TTL && Array.isArray(j.d) && j.d.length) return j.d;
+    }
+  } catch {}
+  return null;
+}
+function cacheSet(key, data) {
+  try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data })); } catch {}
+}
 
 /* ── SAFETY ── */
 function esc(s) {
@@ -344,16 +359,11 @@ function sanitizeRepo(r, username) {
   };
 }
 async function getRepos(owner) {
-  const key = "repos:v2:" + String(owner).toLowerCase();
-  try {
-    const raw = sessionStorage.getItem(key);
-    if (raw) {
-      const j = JSON.parse(raw);
-      if (j && Date.now() - j.t < 10 * 60 * 1000 && Array.isArray(j.d) && j.d.length) return j.d;
-    }
-  } catch {}
+  const key = "repos:v3:" + String(owner).toLowerCase();
+  const cached = cacheGet(key);
+  if (cached) return cached;
   const d = await fetchRepos(owner);
-  try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), d })); } catch {}
+  cacheSet(key, d);
   return d;
 }
 async function fetchRepos(owner) {
@@ -698,6 +708,53 @@ const RELATED_STORY = {
     ["BUILD", "ESP32 DevKit + RC522 reader + 2-inch ST7789 display + buzzer + microSD with CSV logs. Own WiFi network, local phone dashboard, no internet needed."],
     ["RESULT", "▲80 with 55K views on r/esp32. Offline, no cloud, no fees — and a roadmap written by its own users."],
   ],
+  ClipTap: [
+    ["PROBLEM", "Clipboard history tools all wanted accounts, sync, subscriptions. I needed a floating panel that stays out of the way."],
+    ["IDEA", "A lightweight Windows app: searchable history for text, code, images. Pins for repeated snippets. Everything local."],
+    ["BUILD", "Electron + React. SQLite for history storage. Global hotkey summon. Image paste support. No telemetry, no accounts."],
+    ["RESULT", "MIT licensed. The one-click rule killed three features and made the rest obvious."],
+  ],
+  SnapTap: [
+    ["PROBLEM", "Screenshot tools are heavy: editors, clouds, workspaces. Sometimes you just need to snap and share."],
+    ["IDEA", "A single-purpose capture tool. Snap, auto-save, copy to clipboard. No install, no account."],
+    ["BUILD", "Vanilla JS + Canvas API. Clipboard API for one-click copy. GitHub Pages deploy. MIT licensed."],
+    ["RESULT", "Live demo on GitHub Pages. 30-second path from snap to share."],
+  ],
+};
+/* repo → lifecycle status */
+const PROJECT_STATUS = {
+  CrewTrack: "ACTIVE",
+  ClipTap: "ACTIVE",
+  SnapTap: "ACTIVE",
+  "Code-Mate": "PROTOTYPE",
+  PassStrengthAnalyzer: "STABLE",
+  "Intelligent-Film-Production-Search": "ARCHIVED",
+};
+/* repo → engineering decisions (what was actually built and why) */
+const TECH_DECISIONS = {
+  CrewTrack: [
+    ["Why ESP32?", "Cheap (€4-6), WiFi + BLE built-in, Arduino ecosystem. Overkill alternatives (RPi) cost 10x and need OS maintenance."],
+    ["Why offline-first?", "Construction sites have no reliable internet. A €15 box that needs no subscription beats a €50/month SaaS."],
+    ["Why SD card over cloud DB?", "Zero ongoing cost. CSV is human-readable. Data stays on-site — no privacy concerns for workers."],
+    ["Why own WiFi network?", "No router needed on site. Phone connects directly. Works in basements, outdoor yards, anywhere."],
+    ["Trade-off: no real-time sync", "Accepted. Attendance is checked at end of day, not live. Multi-site sync is on the roadmap via MQTT."],
+  ],
+  ClipTap: [
+    ["Why Electron?", "Cross-platform from one codebase. Native feel on Windows where it runs. Web tech I already know."],
+    ["Why SQLite?", "Zero-config, file-based, fast enough for clipboard history. No server process to manage."],
+    ["Why global hotkey?", "Clipboard tools live or die by summon speed. Ctrl+Shift+V anywhere beats alt-tabbing."],
+    ["Trade-off: no cloud sync", "Accepted. Clipboard is local by nature. Sync would mean accounts, servers, privacy questions."],
+  ],
+  SnapTap: [
+    ["Why vanilla JS?", "No build step, no dependencies, instant load. A capture tool should be lighter than what it captures."],
+    ["Why Canvas API?", "Native browser API for pixel manipulation. No server round-trip, no upload, no privacy leak."],
+    ["Why GitHub Pages?", "Free hosting, zero config, custom domain. A demo that deploys on push is a demo that stays current."],
+  ],
+  "Code-Mate": [
+    ["Why Monaco?", "Same engine as VS Code. Familiar editing experience. Syntax highlighting for 50+ languages out of the box."],
+    ["Why Piston API?", "Sandboxed code execution without running a server. Free tier covers demo usage. No backend to maintain."],
+    ["Trade-off: no file system", "Accepted for a playground. Real projects need persistence; snippets don't."],
+  ],
 };
 function repoStatus(updated_at) {
   const ms = Date.parse(updated_at);
@@ -847,6 +904,21 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
         storyBox.innerHTML = `<div class="story-kicker">BUILD OVERVIEW — 20 seconds</div>` +
           story.map(([k, v]) => `<div class="story-row"><span>${esc(k)}</span><p>${esc(v)}</p></div>`).join("");
       } else storyBox.style.display = "none";
+    }
+    const decisions = TECH_DECISIONS[meta.name];
+    const decisionsBox = $("decisionsBox");
+    if (decisionsBox) {
+      if (decisions) {
+        decisionsBox.style.display = "";
+        decisionsBox.innerHTML = `<div class="story-kicker">TECHNICAL DECISIONS — why I built it this way</div>` +
+          decisions.map(([k, v]) => `<div class="story-row"><span>${esc(k)}</span><p>${esc(v)}</p></div>`).join("");
+      } else decisionsBox.style.display = "none";
+    }
+    const status = PROJECT_STATUS[meta.name] || repoStatus(meta.updated_at);
+    const statusEl = $("projectStatus");
+    if (statusEl) {
+      const statusClass = status === "ACTIVE" ? "live" : status === "ARCHIVED" ? "err" : "";
+      statusEl.innerHTML = `<span class="api-status ${statusClass}">● ${esc(status)}</span>`;
     }
     const banner = $("projectBanner");
     const bannerLink = $("bannerLink");

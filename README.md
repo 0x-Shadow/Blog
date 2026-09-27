@@ -1,28 +1,26 @@
-# 0x-shadow.log — code as text
+# 0x-shadow.log
 
-ASCII-style dev blog + project index. Zero build step: plain HTML, CSS and
-one JS file. Projects load live from the GitHub API, READMEs render as
-safe text, notes are written as data.
+Static dev blog + project index. Plain HTML, CSS, one JS file. No build step, no frameworks, no dependencies.
 
-## Run it
+Projects load live from the GitHub API. READMEs render as safe text. Notes are data in `site.js`.
 
-Open `index.html` — or serve the folder:
+## Run
 
 ```
 npx serve .
 ```
 
-## Post a note (30 seconds)
+Open `index.html` works too.
 
-1. Open `site.js`, copy one block in `POSTS`.
-2. Give it a unique `id`, date, title, 2–4 short paragraphs in `body`.
-3. Newest first. If the note covers a repo, add the repo name to
-   `RELATED_POST` — the project page links it automatically.
+## Post a note
+
+1. Copy a block in `POSTS` in `site.js`
+2. Unique `id`, date, title, 2–4 paragraphs in `body`
+3. Newest first. Add repo name to `RELATED_POST` to link project pages automatically.
 
 ## Deploy
 
-Push to `main` — GitHub Pages serves the site. One branch, tags per
-release (`v3.0.0`, …).
+Push to `main`. GitHub Pages serves it. Tags per release.
 
 ## License
 
