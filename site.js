@@ -436,7 +436,7 @@ function projectCard(r, i, owner) {
    pause it on the poster frame so nothing moves. */
 (function asciiHero() {
   /* works with both <img gif> and <video> as the hero background */
-  const v = document.querySelector(".hero-video");
+  const v = document.querySelector(".hero-bg");
   if (v && v.tagName === "VIDEO") {
     if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); }
     else {
