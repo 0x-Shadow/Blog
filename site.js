@@ -460,22 +460,14 @@ function projectCard(r, i, owner) {
 })();
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
-  const lines = [
-    "ESP32 · web · tools",
-    "CrewTrack — ▲80 on r/esp32",
-    "offline-first · no cloud",
-  ];
-  if (reduceMotion) { el.textContent = lines[0]; return; }
-  /* types each line once, forwards only, then rests on the last.
-     No delete + no loop => nothing repeats under the reader's eyes. */
-  let li = 0, ci = 0;
+  const line = "ESP32 · web · tools · builds";
+  if (reduceMotion) { el.textContent = line; return; }
+  /* type once, then stop — no cycling, no delete */
+  let ci = 0;
   (function tick() {
-    if (li >= lines.length) return;
-    const line = lines[li];
     ci++;
     el.textContent = line.slice(0, ci);
-    if (ci === line.length) { li++; ci = 0; return setTimeout(tick, 900); }
-    setTimeout(tick, 85);
+    if (ci < line.length) setTimeout(tick, 75);
   })();
 })();
 (function cursorGlow() {
