@@ -434,14 +434,18 @@ function projectCard(r, i, owner) {
 /* ── HOME ── */
 /* 21st.dev "Robot + Human" ASCII art is a <video>. Under reduced-motion we
    pause it on the poster frame so nothing moves. */
-(function asciiVideo() {
+(function asciiHero() {
+  /* works with both <img gif> and <video> as the hero background */
   const v = document.querySelector(".hero-video");
-  if (!v) return;
-  if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); return; }
-  const play = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
-  play();
-  document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : play(); });
-  /* scroll cue fades out with the hero, same as before */
+  if (v && v.tagName === "VIDEO") {
+    if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); }
+    else {
+      const play = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      play();
+      document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : play(); });
+    }
+  }
+  /* scroll cue fades out as user scrolls past hero */
   const cue = document.querySelector(".scroll-cue");
   const hero = document.querySelector(".hero");
   if (!cue || !hero) return;
@@ -453,21 +457,26 @@ function projectCard(r, i, owner) {
       ticking = false;
       const h = hero.offsetHeight || 600;
       const y = Math.min(Math.max(scrollY || 0, 0), h);
-      const k = 1 - y / (h * 0.9);
-      cue.style.opacity = Math.max(0, k * 1.4 - 0.4).toFixed(3);
+      const k = 1 - y / (h * 0.5);
+      cue.style.opacity = Math.max(0, k).toFixed(3);
     });
   }, { passive: true });
 })();
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
+  const caret = document.querySelector(".caret");
   const line = "ESP32 · web · tools · builds";
-  if (reduceMotion) { el.textContent = line; return; }
-  /* type once, then stop — no cycling, no delete */
+  if (reduceMotion) { el.textContent = line; if (caret) caret.style.display = "none"; return; }
   let ci = 0;
   (function tick() {
     ci++;
     el.textContent = line.slice(0, ci);
-    if (ci < line.length) setTimeout(tick, 75);
+    if (ci < line.length) {
+      setTimeout(tick, 130);
+    } else {
+      /* typing done — blink a few more times then hide */
+      setTimeout(() => { if (caret) caret.style.display = "none"; }, 2400);
+    }
   })();
 })();
 (function cursorGlow() {
