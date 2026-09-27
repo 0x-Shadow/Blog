@@ -461,10 +461,10 @@ function projectCard(r, i, owner) {
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
   const lines = [
-    "loading @0x-Shadow…",
     "ESP32 · web · tools · homelab",
     "CrewTrack — ▲80 on r/esp32",
-    "shipping in public since 2026"
+    "offline-first · no cloud · no fees",
+    "true type / relative / lf",
   ];
   let li = 0, ci = 0, deleting = false;
   if (reduceMotion) { el.textContent = lines[0]; return; }
@@ -473,13 +473,13 @@ function projectCard(r, i, owner) {
     if (!deleting) {
       ci++;
       el.textContent = line.slice(0, ci);
-      if (ci === line.length) { deleting = true; return setTimeout(tick, 1600); }
-      return setTimeout(tick, 55);
+      if (ci === line.length) { deleting = true; return setTimeout(tick, 3200); }
+      return setTimeout(tick, 105);
     }
     ci -= 2;
     el.textContent = line.slice(0, Math.max(0, ci));
-    if (ci <= 0) { deleting = false; ci = 0; li = (li + 1) % lines.length; return setTimeout(tick, 300); }
-    setTimeout(tick, 18);
+    if (ci <= 0) { deleting = false; ci = 0; li = (li + 1) % lines.length; return setTimeout(tick, 700); }
+    setTimeout(tick, 34);
   })();
 })();
 (function cursorGlow() {
@@ -507,7 +507,6 @@ function projectCard(r, i, owner) {
     card.addEventListener("pointerleave", () => { card.style.transform = ""; });
   });
 })();
-if ($("marquee")) $("marquee").textContent = " OPEN_SOURCE ✳ SHIP_IN_PUBLIC ✳ MONO_FOREVER ✳ .:-=+*#%@ ✳ TAP_A_CARD_FOR_README ✳".repeat(6);
 if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   const pg = $("playground");
   if (pg) pg.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
