@@ -90,7 +90,10 @@ img{max-width:100%}
 .hero-stats{max-width:460px}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px}
 [data-theme="light"] .eyebrow{color:#4d6b00}
-.hero-title{font-family:var(--mono);font-weight:800;font-size:clamp(46px,7vw,88px);line-height:.95;letter-spacing:-3px}
+.hero-title{font-family:var(--mono);font-weight:800;font-size:clamp(46px,7vw,88px);line-height:.95;letter-spacing:-3px;animation:heroReveal .8s var(--ease) both}
+@keyframes heroReveal{from{opacity:0;transform:translateY(30px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+.hero-title .outline{display:inline-block;animation:outlinePulse 3s var(--ease) infinite}
+@keyframes outlinePulse{0%,100%{-webkit-text-stroke:2px var(--ink)}50%{-webkit-text-stroke:2px var(--accent)}}
 .hero-title .outline{color:transparent;-webkit-text-stroke:2px var(--ink)}
 .hero-sub{font-family:var(--mono);font-size:14px;margin:18px 0 10px;min-height:26px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-sub .prompt{color:var(--accent)}
@@ -107,7 +110,8 @@ img{max-width:100%}
 
 /* ascii sky canvas */
 #asciiCanvas{touch-action:pan-y}
-.scroll-cue{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--dim)}
+.scroll-cue{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--dim);animation:cueBounce 2s var(--ease) infinite}
+@keyframes cueBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 /* (windowed + image-ascii styles removed in v3.6 — hero is a full-bleed sky now) */
 
 /* marquee */
@@ -178,7 +182,9 @@ img{max-width:100%}
 .card-top .idx{color:var(--accent);font-weight:800}
 .card-top .fork{border:1px solid var(--line2);border-radius:4px;padding:1px 7px}
 .badge-featured{font-family:var(--mono);font-size:9.5px;font-weight:800;background:var(--accent);color:var(--accent-ink);border-radius:5px;padding:3px 8px;margin-left:auto;white-space:nowrap}
-.card.featured{background:color-mix(in srgb,var(--accent) 5%,var(--panel))}
+.card.featured{background:color-mix(in srgb,var(--accent) 5%,var(--panel));position:relative;overflow:hidden}
+.card.featured::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,var(--accent),transparent 40%,transparent 60%,var(--accent));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderFlow 3s linear infinite}
+@keyframes borderFlow{0%{background:linear-gradient(135deg,var(--accent),transparent 40%,transparent 60%,var(--accent))}50%{background:linear-gradient(315deg,var(--accent),transparent 40%,transparent 60%,var(--accent))}100%{background:linear-gradient(135deg,var(--accent),transparent 40%,transparent 60%,var(--accent))}}
 .card h3{font-family:var(--mono);font-size:16.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card p{color:var(--dim);font-size:13.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
 .topics{display:flex;gap:6px;flex-wrap:wrap}

@@ -502,11 +502,11 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   zone.addEventListener("pointerleave", () => { mx = my = -999; });
   const particles = [];
   const stars = [];
-  for (let i = 0; i < (small ? 30 : 60); i++) {
-    particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, life: Math.random() * 200 + 100, maxLife: 300, char: RAMP[Math.floor(Math.random() * RAMP.length)] });
+  for (let i = 0; i < (small ? 50 : 120); i++) {
+    particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .8, vy: (Math.random() - .5) * .8, life: Math.random() * 200 + 100, maxLife: 300, char: RAMP[Math.floor(Math.random() * RAMP.length)], size: Math.random() * 2 + 1 });
   }
-  for (let i = 0; i < (small ? 5 : 12); i++) {
-    stars.push({ x: Math.random() * W, y: Math.random() * H * .6, len: Math.random() * 40 + 20, speed: Math.random() * 3 + 2, angle: Math.PI / 4 + (Math.random() - .5) * .3, life: Math.random() * 100 + 50, maxLife: 150 });
+  for (let i = 0; i < (small ? 8 : 20); i++) {
+    stars.push({ x: Math.random() * W, y: Math.random() * H * .6, len: Math.random() * 60 + 30, speed: Math.random() * 4 + 3, angle: Math.PI / 4 + (Math.random() - .5) * .3, life: Math.random() * 100 + 50, maxLife: 150 });
   }
   function field(x, y) {
     const nx = x / W - 0.5, ny = y / H - 0.5;
@@ -535,23 +535,28 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
       for (const p of particles) {
         p.x += p.vx; p.y += p.vy; p.life--;
         if (p.life <= 0 || p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
-          p.x = Math.random() * W; p.y = Math.random() * H; p.vx = (Math.random() - .5) * .3; p.vy = (Math.random() - .5) * .3; p.life = p.maxLife; p.char = RAMP[Math.floor(Math.random() * RAMP.length)];
+          p.x = Math.random() * W; p.y = Math.random() * H; p.vx = (Math.random() - .5) * .8; p.vy = (Math.random() - .5) * .8; p.life = p.maxLife; p.char = RAMP[Math.floor(Math.random() * RAMP.length)]; p.size = Math.random() * 2 + 1;
         }
-        const alpha = Math.min(1, p.life / 50) * 0.7;
+        const alpha = Math.min(1, p.life / 50) * 0.9;
+        o.font = `${(ch * 0.95) * p.size}px "JetBrains Mono", monospace`;
         o.fillStyle = `rgba(215,255,62,${alpha})`;
         o.fillText(p.char, p.x, p.y);
       }
+      o.font = `${ch * 0.95}px "JetBrains Mono", monospace`;
       for (const s of stars) {
         s.x += Math.cos(s.angle) * s.speed; s.y += Math.sin(s.angle) * s.speed; s.life--;
         if (s.life <= 0 || s.x < -50 || s.x > W + 50 || s.y < -50 || s.y > H + 50) {
-          s.x = Math.random() * W; s.y = Math.random() * H * .5; s.len = Math.random() * 40 + 20; s.speed = Math.random() * 3 + 2; s.angle = Math.PI / 4 + (Math.random() - .5) * .3; s.life = s.maxLife;
+          s.x = Math.random() * W; s.y = Math.random() * H * .5; s.len = Math.random() * 60 + 30; s.speed = Math.random() * 4 + 3; s.angle = Math.PI / 4 + (Math.random() - .5) * .3; s.life = s.maxLife;
         }
-        const alpha = Math.min(1, s.life / 30) * 0.8;
+        const alpha = Math.min(1, s.life / 30);
         const grad = o.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len);
         grad.addColorStop(0, `rgba(255,255,255,${alpha})`);
+        grad.addColorStop(0.5, `rgba(215,255,62,${alpha * 0.5})`);
         grad.addColorStop(1, "rgba(255,255,255,0)");
-        o.strokeStyle = grad; o.lineWidth = 1.5;
+        o.strokeStyle = grad; o.lineWidth = 2;
         o.beginPath(); o.moveTo(s.x, s.y); o.lineTo(s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len); o.stroke();
+        o.fillStyle = `rgba(255,255,255,${alpha})`;
+        o.beginPath(); o.arc(s.x, s.y, 2, 0, Math.PI * 2); o.fill();
       }
     }
     o.fillStyle = "#d7ff3e"; o.font = '700 13px "JetBrains Mono", monospace';
