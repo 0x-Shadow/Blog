@@ -435,16 +435,25 @@ function projectCard(r, i, owner) {
 /* 21st.dev "Robot + Human" ASCII art is a <video>. Under reduced-motion we
    pause it on the poster frame so nothing moves. */
 (function asciiHero() {
-  /* works with both <img gif> and <video> as the hero background */
   const v = document.querySelector(".hero-bg");
-  if (v && v.tagName === "VIDEO") {
-    if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); }
-    else {
-      const play = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
-      play();
-      document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : play(); });
-    }
-  }
+  if (!v || v.tagName !== "VIDEO") return;
+
+  const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+
+  if (reduceMotion) { v.pause(); return; }
+
+  /* try immediately */
+  tryPlay();
+  /* retry when enough data loaded */
+  v.addEventListener("canplay", tryPlay);
+  v.addEventListener("loadeddata", tryPlay);
+  /* retry on first user interaction (for strict autoplay policies) */
+  const unlock = () => { tryPlay(); document.removeEventListener("click", unlock); document.removeEventListener("touchstart", unlock); };
+  document.addEventListener("click", unlock, { once: true });
+  document.addEventListener("touchstart", unlock, { once: true });
+  /* pause when tab hidden, resume when visible */
+  document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : tryPlay(); });
+
   /* scroll cue fades out as user scrolls past hero */
   const cue = document.querySelector(".scroll-cue");
   const hero = document.querySelector(".hero");
@@ -457,8 +466,7 @@ function projectCard(r, i, owner) {
       ticking = false;
       const h = hero.offsetHeight || 600;
       const y = Math.min(Math.max(scrollY || 0, 0), h);
-      const k = 1 - y / (h * 0.5);
-      cue.style.opacity = Math.max(0, k).toFixed(3);
+      cue.style.opacity = Math.max(0, 1 - y / (h * 0.5)).toFixed(3);
     });
   }, { passive: true });
 })();
