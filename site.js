@@ -435,8 +435,10 @@ function projectCard(r, i, owner) {
 /* ── HOME ── */
 function startAsciiRain() {
   const layers = document.querySelectorAll(".ascii-rain");
+  if (!layers.length) return;
+  const small = matchMedia("(max-width: 560px)").matches;
   layers.forEach((layer, li) => {
-    if (li > 2) return;
+    if (li > 2 || reduceMotion) return;
     const w = layer.clientWidth || 1280;
     const h = layer.clientHeight || 600;
     const cv = document.createElement("canvas");
@@ -445,45 +447,53 @@ function startAsciiRain() {
     layer.appendChild(cv);
     const cx = cv.getContext("2d");
     if (!cx) return;
-    const fs = [10, 12, 14][li];
+    const fs = [14, 11, 9][li];
     const col = Math.ceil(w / fs);
+    const TRAIL = 22;
+    const POOL = "0123456789ABCDEFabcdefｦｱｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
+    const pick = () => POOL.charAt(Math.floor(Math.random() * POOL.length)) || "0";
     const drops = Array.from({ length: col }, () => ({
       y: Math.random() * -h,
-      sp: 0.5 + Math.random() * 1.5 + li * 0.3,
-      chars: Array.from({ length: 30 }, () => " .:-=+*#%@"[Math.floor(Math.random() * 10)])
+      sp: 1.2 + Math.random() * 2.4 + li * 0.4,
+      chars: Array.from({ length: TRAIL }, pick)
     }));
-    layer._cleanup = () => cv.remove();
-    function drawRain() {
-      if (reduceMotion) return;
+    let onScreen = true, last = 0, raf = 0;
+    new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0 }).observe(layer);
+    const budget = small ? 66 : 33;
+    function draw() {
+      raf = requestAnimationFrame(draw);
+      if (!onScreen || document.hidden) return;
+      const now = performance.now();
+      if (now - last < budget) return;
+      last = now;
       cx.clearRect(0, 0, w, h);
       cx.font = `${fs}px "JetBrains Mono", monospace`;
-      drops.forEach((d, i) => {
+      cx.textBaseline = "top";
+      for (let i = 0; i < drops.length; i++) {
+        const d = drops[i];
         d.y += d.sp;
-        if (d.y * fs > h + 400) { d.y = Math.random() * -200; d.sp = 0.5 + Math.random() * 1.5; }
-        d.chars.forEach((c, j) => {
+        if (d.y * fs > h + TRAIL * fs) { d.y = Math.random() * -40; d.sp = 1.2 + Math.random() * 2.4; }
+        for (let j = 0; j < TRAIL; j++) {
           const y = (d.y - j) * fs;
-          if (y < -fs || y > h + fs) return;
-          const a = 1 - j / d.chars.length;
-          cx.fillStyle = j === 0 ? `rgba(255,255,255,${a * (0.5 + li * 0.2)})` : `rgba(215,255,62,${a * (0.35 - li * 0.08)})`;
-          cx.fillText(c, i * fs, y);
-        });
-      });
-      layer._raf = requestAnimationFrame(drawRain);
+          if (y < -fs || y > h) continue;
+          const a = 1 - j / TRAIL;
+          cx.fillStyle = j === 0 ? `rgba(255,255,255,${a})` : `rgba(215,255,62,${a * 0.5})`;
+          cx.fillText(d.chars[j], i * fs, y);
+        }
+      }
     }
-    drawRain();
+    raf = requestAnimationFrame(draw);
+    layer._cleanup = () => { cancelAnimationFrame(raf); cv.remove(); };
   });
 }
 function stopAsciiRain() {
-  document.querySelectorAll(".ascii-rain").forEach(l => {
-    if (l._raf) cancelAnimationFrame(l._raf);
-    if (l._cleanup) l._cleanup();
-  });
+  document.querySelectorAll(".ascii-rain").forEach(l => { if (l._cleanup) l._cleanup(); });
 }
 addEventListener("beforeunload", stopAsciiRain);
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
   const lines = [
-    "initializing 0x-Shadow…",
+    "loading @0x-Shadow…",
     "ESP32 · web · tools · homelab",
     "CrewTrack — ▲80 on r/esp32",
     "shipping in public since 2026"
@@ -495,14 +505,13 @@ addEventListener("beforeunload", stopAsciiRain);
     if (!deleting) {
       ci++;
       el.textContent = line.slice(0, ci);
-      if (ci === line.length) { deleting = true; return setTimeout(tick, 2000); }
-      setTimeout(tick, 45 + Math.random() * 40);
-    } else {
-      ci--;
-      el.textContent = line.slice(0, ci);
-      if (ci === 0) { deleting = false; li = (li + 1) % lines.length; return setTimeout(tick, 400); }
-      setTimeout(tick, 20);
+      if (ci === line.length) { deleting = true; return setTimeout(tick, 1600); }
+      return setTimeout(tick, 55);
     }
+    ci -= 2;
+    el.textContent = line.slice(0, Math.max(0, ci));
+    if (ci <= 0) { deleting = false; ci = 0; li = (li + 1) % lines.length; return setTimeout(tick, 300); }
+    setTimeout(tick, 18);
   })();
 })();
 (function cursorGlow() {

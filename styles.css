@@ -80,14 +80,15 @@ img{max-width:100%}
 
 /* hero — live ASCII sky */
 .hero{border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-.hero-ascii{position:absolute;inset:0;z-index:0}
+.hero-ascii{position:absolute;inset:0;z-index:0;pointer-events:none}
 .hero-ascii canvas{width:100%;height:100%;display:block}
-.ascii-rain{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
-.hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 80% 70% at 35% 45%,color-mix(in srgb,var(--bg) 82%,transparent),color-mix(in srgb,var(--bg) 95%,transparent)),
-  linear-gradient(to bottom,color-mix(in srgb,var(--bg) 70%,transparent),color-mix(in srgb,var(--bg) 96%,transparent) 85%)}
-.hero-inner{max-width:var(--max);margin:0 auto;padding:64px 16px 40px;position:relative;z-index:2}
+.ascii-rain{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;opacity:.3}
+.ascii-rain:nth-of-type(2){z-index:1;opacity:.2}
+.ascii-rain:nth-of-type(3){z-index:1;opacity:.13}
+.hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse 75% 65% at 34% 48%,color-mix(in srgb,var(--bg) 94%,transparent),color-mix(in srgb,var(--bg) 55%,transparent)),
+  linear-gradient(to bottom,color-mix(in srgb,var(--bg) 75%,transparent),color-mix(in srgb,var(--bg) 97%,transparent) 88%)}
+.hero-inner{max-width:var(--max);margin:0 auto;padding:64px 16px 40px;position:relative;z-index:4}
 .hero-single{max-width:760px;margin:0 auto;text-align:left}
 .hero-stats{max-width:460px}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px}
@@ -117,7 +118,7 @@ img{max-width:100%}
 /* (windowed + image-ascii styles removed in v3.6 — hero is a full-bleed sky now) */
 
 /* marquee */
-.marquee{border-top:1px solid var(--line);overflow:hidden;padding:9px 0;background:var(--bg2)}
+.marquee{border-top:1px solid var(--line);overflow:hidden;padding:9px 0;background:var(--bg2);position:relative;z-index:3}
 .marquee-track{white-space:nowrap;font-family:var(--mono);font-size:11.5px;color:var(--faint);width:max-content;animation:scroll 28s linear infinite}
 @keyframes scroll{to{transform:translateX(-50%)}}
 
