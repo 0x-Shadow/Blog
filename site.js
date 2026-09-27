@@ -324,7 +324,6 @@ if ($("themeBtn")) $("themeBtn").addEventListener("click", () => {
   syncThemeLabel(); toast("theme: " + h.dataset.theme);
 });
   syncThemeLabel();
-  startAsciiRain();
   if ($("menuBtn")) $("menuBtn").addEventListener("click", () => {
   const m = $("mobileMenu"), open = m.classList.toggle("open");
   $("menuBtn").setAttribute("aria-expanded", String(open));
@@ -433,63 +432,32 @@ function projectCard(r, i, owner) {
 }
 
 /* ── HOME ── */
-function startAsciiRain() {
-  const layers = document.querySelectorAll(".ascii-rain");
-  if (!layers.length) return;
-  const small = matchMedia("(max-width: 560px)").matches;
-  layers.forEach((layer, li) => {
-    if (li > 2 || reduceMotion) return;
-    const w = layer.clientWidth || 1280;
-    const h = layer.clientHeight || 600;
-    const cv = document.createElement("canvas");
-    cv.width = w; cv.height = h;
-    cv.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none";
-    layer.appendChild(cv);
-    const cx = cv.getContext("2d");
-    if (!cx) return;
-    const fs = [14, 11, 9][li];
-    const col = Math.ceil(w / fs);
-    const TRAIL = 22;
-    const POOL = "0123456789ABCDEFabcdefｦｱｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ";
-    const pick = () => POOL.charAt(Math.floor(Math.random() * POOL.length)) || "0";
-    const drops = Array.from({ length: col }, () => ({
-      y: Math.random() * -h,
-      sp: 1.2 + Math.random() * 2.4 + li * 0.4,
-      chars: Array.from({ length: TRAIL }, pick)
-    }));
-    let onScreen = true, last = 0, raf = 0;
-    new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0 }).observe(layer);
-    const budget = small ? 66 : 33;
-    function draw() {
-      raf = requestAnimationFrame(draw);
-      if (!onScreen || document.hidden) return;
-      const now = performance.now();
-      if (now - last < budget) return;
-      last = now;
-      cx.clearRect(0, 0, w, h);
-      cx.font = `${fs}px "JetBrains Mono", monospace`;
-      cx.textBaseline = "top";
-      for (let i = 0; i < drops.length; i++) {
-        const d = drops[i];
-        d.y += d.sp;
-        if (d.y * fs > h + TRAIL * fs) { d.y = Math.random() * -40; d.sp = 1.2 + Math.random() * 2.4; }
-        for (let j = 0; j < TRAIL; j++) {
-          const y = (d.y - j) * fs;
-          if (y < -fs || y > h) continue;
-          const a = 1 - j / TRAIL;
-          cx.fillStyle = j === 0 ? `rgba(255,255,255,${a})` : `rgba(215,255,62,${a * 0.5})`;
-          cx.fillText(d.chars[j], i * fs, y);
-        }
-      }
-    }
-    raf = requestAnimationFrame(draw);
-    layer._cleanup = () => { cancelAnimationFrame(raf); cv.remove(); };
-  });
-}
-function stopAsciiRain() {
-  document.querySelectorAll(".ascii-rain").forEach(l => { if (l._cleanup) l._cleanup(); });
-}
-addEventListener("beforeunload", stopAsciiRain);
+/* 21st.dev "Robot + Human" ASCII art is a <video>. Under reduced-motion we
+   pause it on the poster frame so nothing moves. */
+(function asciiVideo() {
+  const v = document.querySelector(".hero-video");
+  if (!v) return;
+  if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); return; }
+  const play = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  play();
+  document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : play(); });
+  /* scroll cue fades out with the hero, same as before */
+  const cue = document.querySelector(".scroll-cue");
+  const hero = document.querySelector(".hero");
+  if (!cue || !hero) return;
+  let ticking = false;
+  addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const h = hero.offsetHeight || 600;
+      const y = Math.min(Math.max(scrollY || 0, 0), h);
+      const k = 1 - y / (h * 0.9);
+      cue.style.opacity = Math.max(0, k * 1.4 - 0.4).toFixed(3);
+    });
+  }, { passive: true });
+})();
 (function typewriter() {
   const el = $("typewriter"); if (!el) return;
   const lines = [
@@ -544,98 +512,6 @@ if ($("tryTerm")) $("tryTerm").addEventListener("click", () => {
   const pg = $("playground");
   if (pg) pg.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 });
-
-/* ASCII hero sky (home only): full-bleed field, particles, shooting stars, fades on scroll */
-(function asciiHero() {
-  const cv = $("asciiCanvas"); if (!cv) return;
-  const hero = cv.closest(".hero");
-  const cue = document.querySelector(".scroll-cue");
-  const small = matchMedia("(max-width: 560px)").matches;
-  const COLS = small ? 24 : 44, ROWS = small ? 18 : 28;
-  const W = cv.width, H = cv.height, RAMP = " .:-=+*#%@";
-  const cw = W / COLS, ch = H / ROWS;
-  const ctx = cv.getContext("2d");
-  const off = document.createElement("canvas"); off.width = W; off.height = H;
-  const o = off.getContext("2d");
-  if (!ctx || !o) return;
-  let mx = -999, my = -999, t = 0, visible = true;
-  new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
-  const zone = hero || cv;
-  zone.addEventListener("pointermove", e => {
-    const r = cv.getBoundingClientRect();
-    mx = (e.clientX - r.left) / r.width * W; my = (e.clientY - r.top) / r.height * H;
-  }, { passive: true });
-  zone.addEventListener("pointerleave", () => { mx = my = -999; });
-  const stars = [];
-  for (let i = 0; i < (small ? 4 : 8); i++) {
-    stars.push({ x: Math.random() * W, y: Math.random() * H * .5, len: Math.random() * 50 + 25, speed: Math.random() * 2 + 1.5, angle: Math.PI / 4 + (Math.random() - .5) * .3, life: Math.random() * 100 + 50, maxLife: 150 });
-  }
-  function field(x, y) {
-    const nx = x / W - 0.5, ny = y / H - 0.5;
-    let v = Math.sin(nx * 4 + t * 0.8) * Math.cos(ny * 3 - t * 0.6) * 0.5 + 0.5;
-    v += Math.sin((nx + ny) * 6 + t) * 0.08;
-    if (x > W / 2) v = Math.floor(v * 3) / 3;
-    else { const d = Math.hypot(nx + 0.22, ny); v += Math.max(0, 0.3 - d) * 0.8; }
-    const md = Math.hypot(x - mx, y - my);
-    if (md < 120) v += (1 - md / 120) * 0.4 * Math.sin(t * 4);
-    return Math.min(1, Math.max(0, v));
-  }
-  function frame() {
-    t += 0.02;
-    o.fillStyle = "#060607"; o.fillRect(0, 0, W, H);
-    o.font = `${ch * 0.9}px "JetBrains Mono", monospace`; o.textBaseline = "top";
-    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-      const x = c * cw, y = r * ch, v = field(x + cw / 2, y + ch / 2);
-      const chr = RAMP[Math.min(RAMP.length - 1, (v * RAMP.length) | 0)];
-      if (chr === " ") continue;
-      const split = Math.abs(x + cw / 2 - W / 2) < 3;
-      o.fillStyle = split ? "#d7ff3e" : v > 0.8 ? "#fff" : `rgba(180,180,190,${0.15 + v * 0.35})`;
-      o.fillText(chr, x + cw * 0.15, y);
-    }
-    if (!reduceMotion) {
-      o.font = `${ch * 0.9}px "JetBrains Mono", monospace`;
-      for (const s of stars) {
-        s.x += Math.cos(s.angle) * s.speed; s.y += Math.sin(s.angle) * s.speed; s.life--;
-        if (s.life <= 0 || s.x < -50 || s.x > W + 50 || s.y < -50 || s.y > H + 50) {
-          s.x = Math.random() * W; s.y = Math.random() * H * .5; s.len = Math.random() * 50 + 25; s.speed = Math.random() * 2 + 1.5; s.angle = Math.PI / 4 + (Math.random() - .5) * .3; s.life = s.maxLife;
-        }
-        const alpha = Math.min(1, s.life / 40) * 0.6;
-        const grad = o.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len);
-        grad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        grad.addColorStop(1, "rgba(255,255,255,0)");
-        o.strokeStyle = grad; o.lineWidth = 1.5;
-        o.beginPath(); o.moveTo(s.x, s.y); o.lineTo(s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len); o.stroke();
-      }
-    }
-    o.fillStyle = "#d7ff3e"; o.font = '700 12px "JetBrains Mono", monospace';
-    o.fillText("[ HUMAN", 12, 12); o.fillText("ROBOT ]", W - 76, 12);
-    ctx.drawImage(off, 0, 0);
-  }
-  frame();
-  const budget = small ? 80 : 33;
-  let last = 0;
-  if (!reduceMotion) (function loop(now) {
-    requestAnimationFrame(loop);
-    if (!visible || document.hidden || cv.offsetParent === null) return;
-    if (now - last < budget) return;
-    last = now;
-    frame();
-  })(0);
-  let ticking = false;
-  const fade = () => {
-    ticking = false;
-    const h = hero ? hero.offsetHeight : 600;
-    const y = Math.min(Math.max(window.scrollY || 0, 0), h);
-    const k = 1 - y / (h * 0.9);
-    cv.style.opacity = Math.max(0, k).toFixed(3);
-    cv.style.transform = `translateY(${Math.round(y * 0.22)}px)`;
-    if (cue) cue.style.opacity = Math.max(0, k * 1.4 - 0.4).toFixed(3);
-  };
-  addEventListener("scroll", () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(fade); }
-  }, { passive: true });
-  fade();
-})();
 
 /* ── TERMINAL playground (home only; static strings only — no network data) ── */
 (function terminal() {
