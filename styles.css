@@ -83,14 +83,8 @@ img{max-width:100%}
 .hero-ascii{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.5}
 .hero-ascii canvas{width:100%;height:100%;display:block}
 .hero-video{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;
-  transform:scale(1.8);transform-origin:50% 48%;
-  filter:contrast(1.3) brightness(.62) saturate(0);
-  animation:asciiAlive 44s ease-in-out infinite alternate;will-change:transform}
-@keyframes asciiAlive{
-  0%{transform:scale(1.8) translate3d(-1.2%,.6%,0)}
-  50%{transform:scale(1.94) translate3d(1.2%,-.8%,0)}
-  100%{transform:scale(1.83) translate3d(-.6%,1%,0)}
-}
+  transform:scale(1.8);transform-origin:50% 50%;
+  filter:contrast(1.3) brightness(.62) saturate(0)}
 .hero-ascii::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(circle at 50% 50%,rgba(215,255,62,.05),transparent 60%);
   animation:breathe 9s ease-in-out infinite}
