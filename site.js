@@ -25,6 +25,73 @@ const DEMO_PROJECTS = [
    3. Write 2-4 short paragraphs in body. 4. Push — done. Newest first. */
 const POSTS = [
   {
+    id: "tutorial-rfid-attendance-terminal", date: "2026.10.04", read: "6 min", tag: "tutorial",
+    title: "Tutorial: build the €15 RFID attendance terminal",
+    excerpt: "Parts, wiring, firmware shape, and the offline-first rule — everything CrewTrack taught me, step by step.",
+    img: "shots/crewtrack.jpg",
+    body: [
+      "You need: an ESP32 DevKit (€4–6), an RC522 RFID reader (€2), a 2-inch ST7789 TFT (€5), a microSD module (€2), an active buzzer (€1), and a printed enclosure. Total: €12–18. That is the whole shopping list — no subscriptions, no cloud accounts.",
+      "Wire the RC522 to the ESP32 over SPI, the ST7789 display on SPI as well, the microSD module for storage, and the buzzer to any free GPIO for tap confirmation. Keep the wiring short and power everything from a single stable 5V supply — brownouts corrupt SD writes, and that is the most common failure in this kind of build.",
+      "The firmware loop is small on purpose. On card tap: read the UID, append one CSV row (timestamp, UID) to the SD card, print the name on the TFT, beep once. Then host a WiFi access point with a tiny dashboard page so a phone can browse the log — no router and no internet required on site.",
+      "The rule that makes it work in real life is offline-first or nothing. Construction yards have no reliable internet, CSV is human-readable when something looks wrong, and data staying on-site means zero privacy arguments. Test it with a real crew for a week before you print the final enclosure — the taps will teach you what the bench never does.",
+    ],
+  },
+  {
+    id: "tutorial-expo-private-feed-ui", date: "2026.10.04", read: "5 min", tag: "tutorial",
+    title: "Tutorial: a private-feed UI in Expo (Circles)",
+    excerpt: "Glass tab bar, spring circle switcher, audited dark mode — and screenshot loops that verify it all.",
+    img: "shots/circles-feed.png",
+    body: [
+      "Start with the tab structure: feed, search, reels, messages, profile — five tabs, one floating glass bar with real backdrop blur. The bar floats above content instead of docking to the edge, which is what makes the whole app feel designed rather than assembled.",
+      "The signature piece is the circle switcher: a spring-animated control in the middle of the feed that swaps between private groups (family, friends, photo walks). Animate it with a spring, not a tween — springs forgive interrupted gestures, tweens fight them.",
+      "Reels go full-screen with a glass action rail on the side; DMs get unread badges plus filters; notes support attachable songs. Then audit dark mode color by color — in my pass 24 stray labels were invisible until every screen was checked in both themes.",
+      "Verify with screenshots, not vibes: web export plus headless Chrome shooting every tab in light and dark, twice, fixing what the pixels show each loop. When the loop comes back clean and tsc is green, the UI is done — not before.",
+    ],
+  },
+  {
+    id: "tutorial-strict-types-movie-app", date: "2026.10.04", read: "4 min", tag: "tutorial",
+    title: "Tutorial: strict types that catch missing posters",
+    excerpt: "Model the API response once, in one place — the CineHub approach to killing undefined-poster bugs.",
+    img: "https://raw.githubusercontent.com/0x-Shadow/CineHub/main/docs/screenshots/home.png",
+    body: [
+      "Every movie API returns almost-what-you-expect: poster paths that are sometimes null, dates in three formats, missing overviews. Model the response as one strict type the moment it crosses into your app — nullable poster, fallback title, normalized date — and never let raw JSON past that boundary.",
+      "Render from the model, not the payload. The poster component takes a guaranteed string or renders a designed placeholder; it never sees null. This single rule killed a whole class of blank-card bugs in CineHub before they shipped.",
+      "Then cut ruthlessly: search quality and speed are the product, everything else is decoration. Build search first, make it instant, and only then earn the right to add tracking lists and sharing.",
+    ],
+  },
+  {
+    id: "crewtrack-teardown-15-euro-box", date: "2026.10.04", read: "7 min", tag: "build-log",
+    title: "Teardown: the €15 box that beat SaaS attendance",
+    excerpt: "Full BOM, wiring, firmware lessons, and what 55K views on r/esp32 taught me about building for real crews.",
+    body: [
+      "CrewTrack started as a favor: my father's electrical crew lost hours every month to attendance arguments. Who was on site, and when? The answer lived in memory and chat messages. After one look at per-seat SaaS pricing for five electricians, I built the €15 box instead.",
+      "The bill of materials: ESP32 DevKit (€4–6), RC522 RFID reader (€2), 2-inch ST7789 TFT (€5), microSD module (€2), active buzzer (€1), plus a printed enclosure from the Ender 3. Total: €12–18 depending on sourcing. No cloud, no subscription, no monthly fee — ever.",
+      "The firmware rule was offline-first or nothing. Construction sites have no reliable internet, so the terminal keeps CSV records on the SD card and hosts its own WiFi network with a local dashboard. A phone connects directly — no router, no internet, works in basements and open yards.",
+      "Posting it on r/esp32 (▲80, 55K views) rewrote the roadmap better than I could: a fire register showing who is on site right now, BLE passive detection instead of taps, and graduating from SD to MQTT or LoRa for multi-site crews. The users designed v1.1 for me.",
+      "The lesson I keep reusing: small crews don't need enterprise software. They need a cheap box that just works, data that stays on-site, and zero new monthly bills. Price the solution against the SaaS it replaces — €15 once versus €50 a month forever is not a contest.",
+    ],
+  },
+  {
+    id: "receipt-market-price-map", date: "2026.10.03", read: "4 min", tag: "build-log",
+    title: "Snap a receipt, map Greece's prices",
+    excerpt: "On-device OCR, Supabase Realtime, 0€/month. How receipt-market stays free.",
+    body: [
+      "Grocery prices in Greece move fast and nobody publishes them in one place. receipt-market turns every shopper into a sensor: snap your receipt, OCR reads it on-device, and the prices land on a live community map.",
+      "The architecture keeps the monthly bill at zero. OCR runs on the phone — nothing to transcribe server-side — and Supabase covers auth, storage and realtime on its free tier. Expo ships it to both app stores from one codebase.",
+      "The hard part isn't code, it's trust: receipt data is only useful if it's fresh and honest. Community voting on prices and reliable store matching is the next problem to solve before this earns its backend.",
+    ],
+  },
+  {
+    id: "cinehub-movie-discovery", date: "2026.10.02", read: "3 min", tag: "build-log",
+    title: "CineHub: search, track, share what you watch",
+    excerpt: "A movie discovery platform in React + TypeScript. What I built and what I'd cut.",
+    body: [
+      "CineHub is a movie discovery platform: search titles, track what you've watched, share lists. React + TypeScript on the frontend, a public movie API behind it, zero backend of its own.",
+      "It taught me the type-safety lesson I now apply everywhere: modeling API responses as strict types caught a whole class of missing-poster bugs before they shipped. On a small app the types are the documentation.",
+      "If I rebuilt it today I'd cut half the pages. Discovery lives or dies on search quality and speed — everything else is decoration around those two.",
+    ],
+  },
+  {
     id: "circles-private-photo-sharing", date: "2026.09.26", read: "4 min", tag: "build-log",
     title: "Circles: an Instagram rebuild with a reason to exist",
     excerpt: "Feed, stories, reels, DMs — pivoted to private circles. Glass nav, dark mode that works, screenshots to prove it.",
@@ -857,15 +924,17 @@ const RELATED_POST = {
   ClipTap: "cliptap-clipboard-that-stays-open",
   SnapTap: "snaptap-capture-tool",
   "Code-Mate": "codemate-no-backend",
+  "receipt-market": "receipt-market-price-map",
+  CineHub: "cinehub-movie-discovery",
 };
-/* repo → rescued screenshot (powers the banner on project pages) */
+/* repo → rescued screenshot (powers the banner on project pages).
+   Only real screenshots here — repos without one show no banner. */
 const PROJECT_SHOTS = {
-  CineHub: "shots/cinehub.png",
+  CineHub: "https://raw.githubusercontent.com/0x-Shadow/CineHub/main/docs/screenshots/home.png",
   "instagram-clone": "shots/circles-feed.png",
   CrewTrack: "shots/crewtrack.jpg",
   ClipTap: "shots/cliptap-master.png",
   SnapTap: "shots/snaptap.png",
-  "receipt-market": "shots/receipt-market.png",
 };
 /* repo → platform (shown in the DNA strip; keep to verified facts) */
 const PROJECT_META = {
@@ -948,6 +1017,13 @@ function repoStatus(updated_at) {
   const ms = Date.parse(updated_at);
   if (Number.isNaN(ms)) return "STABLE";
   return Date.now() - ms < 120 * 864e5 ? "ACTIVE" : "STABLE";
+}
+/* post images: local shots/ or raw repo files only — everything else stays text */
+function postImage(u) {
+  const s = String(u || "");
+  if (/^shots\/[\w.\-/]{1,120}\.(png|jpe?g|gif|webp)$/.test(s)) return s;
+  if (/^https:\/\/raw\.githubusercontent\.com\/0x-Shadow\/[\w.\-+]{1,100}\/(main|master)\/[\w.\-+/]{1,160}\.(png|jpe?g|gif|webp)$/.test(s)) return s;
+  return "";
 }
 function slugify(s) {
   return String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "s";
@@ -1152,15 +1228,28 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
 /* ── page: BLOG index + POST ── */
 (function blogPages() {
   const list = $("postsList");
+  let activeTag = "";
+  const paintTags = () => {
+    const row = $("tagRow"); if (!row) return;
+    const tags = [...new Set(POSTS.map(p => p.tag))];
+    row.innerHTML = [`<button class="tag-pill${activeTag ? "" : " active"}" data-tag="">all</button>`,
+      ...tags.map(t => `<button class="tag-pill${t === activeTag ? " active" : ""}" data-tag="${esc(t)}">#${esc(t)}</button>`)].join("");
+    row.querySelectorAll(".tag-pill").forEach(b => b.addEventListener("click", () => {
+      activeTag = b.dataset.tag || "";
+      paintTags(); drawPosts();
+    }));
+  };
   const drawPosts = () => {
     if (!list) return;
     const q = $("postSearch") ? $("postSearch").value.trim().toLowerCase() : "";
     const shown = POSTS.filter(p =>
-      !q || `${p.title} ${p.excerpt} ${p.tag}`.toLowerCase().includes(q));
+      (!activeTag || p.tag === activeTag) &&
+      (!q || `${p.title} ${p.excerpt} ${p.tag}`.toLowerCase().includes(q)));
     list.innerHTML = shown.length ? shown.map(postCard).join("")
       : `<div class="empty">+-- 0 notes match --+<br>| clear the filter |<br>+--------------------+</div>`;
     bindReveals(list);
   };
+  paintTags();
   drawPosts();
   if ($("postSearch")) $("postSearch").addEventListener("input", drawPosts);
   const root = $("postRoot");
@@ -1176,6 +1265,14 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
   $("postTitle").textContent = p.title;
   $("postMeta").textContent = `BUILD LOG #${postNo(p)} · ${p.date} · ${p.tag} · ${p.read}`;
   $("postBody").innerHTML = p.body.map(par => `<p>${esc(par)}</p>`).join("");
+  const pimg = $("postImage");
+  if (pimg) {
+    const u = postImage(p.img);
+    if (u) {
+      pimg.src = u; pimg.alt = p.title; pimg.style.display = "";
+      pimg.onclick = () => openLightbox(u, p.title);
+    } else pimg.style.display = "none";
+  }
   const i = POSTS.indexOf(p);
   const prev = POSTS[(i - 1 + POSTS.length) % POSTS.length];
   const next = POSTS[(i + 1) % POSTS.length];
@@ -1183,6 +1280,11 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
     <a class="page-btn" href="post.html?id=${esc(prev.id)}">← ${esc(prev.title)}</a>
     <a class="page-btn" href="blog.html">ALL ≡</a>
     <a class="page-btn" href="post.html?id=${esc(next.id)}">${esc(next.title)} →</a>`;
+  const kr = $("keepReading");
+  if (kr) {
+    kr.innerHTML = POSTS.filter(x => x.id !== p.id).slice(0, 3).map(postCard).join("");
+    bindReveals(kr);
+  }
 })();
 
 /* ── page: ABOUT ── */
@@ -1206,6 +1308,35 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
       $("aboutStats").innerHTML = `<div><b>${allRepos.length}</b><span>repos</span></div>`;
     });
   }
+})();
+
+/* ── optional hooks: fill the constants to switch on ── */
+const ANALYTICS_URL = ""; // goatcounter counter url, e.g. "https://0x-shadow.goatcounter.com/count"
+const STATUS_URL = ""; // public uptime-kuma status page url
+(function analytics() {
+  if (!ANALYTICS_URL) return;
+  const s = document.createElement("script");
+  s.setAttribute("data-goatcounter", ANALYTICS_URL);
+  s.src = "//gc.zgo.at/count.js"; s.async = true;
+  document.head.appendChild(s);
+})();
+(function statusHook() {
+  if (!STATUS_URL) return;
+  const a = document.getElementById("statusLink");
+  if (a) { a.href = STATUS_URL; a.style.display = ""; }
+})();
+/* comments via utterances (github issues as comments — enable the app on the repo) */
+(function comments() {
+  const box = $("comments"); if (!box) return;
+  const s = document.createElement("script");
+  s.src = "https://utteranc.es/client.js";
+  s.setAttribute("repo", "0x-Shadow/Blog");
+  s.setAttribute("issue-term", "pathname");
+  s.setAttribute("label", "comments");
+  s.setAttribute("theme", document.documentElement.dataset.theme === "light" ? "github-light" : "github-dark");
+  s.setAttribute("crossorigin", "anonymous");
+  s.async = true;
+  box.appendChild(s);
 })();
 
 bindReveals(document);

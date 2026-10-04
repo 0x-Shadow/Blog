@@ -6,6 +6,48 @@
 <description>Things I built, broke, fixed, and learned.</description>
 <language>en</language>
 <item>
+<title>Tutorial: build the €15 RFID attendance terminal</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=tutorial-rfid-attendance-terminal</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=tutorial-rfid-attendance-terminal</guid>
+<pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+<description>Parts, wiring, firmware shape, and the offline-first rule — everything CrewTrack taught me, step by step.</description>
+</item>
+<item>
+<title>Tutorial: a private-feed UI in Expo (Circles)</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=tutorial-expo-private-feed-ui</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=tutorial-expo-private-feed-ui</guid>
+<pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+<description>Glass tab bar, spring circle switcher, audited dark mode — and screenshot loops that verify it all.</description>
+</item>
+<item>
+<title>Tutorial: strict types that catch missing posters</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=tutorial-strict-types-movie-app</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=tutorial-strict-types-movie-app</guid>
+<pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+<description>Model the API response once, in one place — the CineHub approach to killing undefined-poster bugs.</description>
+</item>
+<item>
+<title>Teardown: the €15 box that beat SaaS attendance</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=crewtrack-teardown-15-euro-box</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=crewtrack-teardown-15-euro-box</guid>
+<pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+<description>Full BOM, wiring, firmware lessons, and what 55K views on r/esp32 taught me about building for real crews.</description>
+</item>
+<item>
+<title>Snap a receipt, map Greece's prices</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=receipt-market-price-map</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=receipt-market-price-map</guid>
+<pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+<description>On-device OCR, Supabase Realtime, 0€/month. How receipt-market stays free.</description>
+</item>
+<item>
+<title>CineHub: search, track, share what you watch</title>
+<link>https://0x-shadow.github.io/Blog/post.html?id=cinehub-movie-discovery</link>
+<guid>https://0x-shadow.github.io/Blog/post.html?id=cinehub-movie-discovery</guid>
+<pubDate>Fri, 02 Oct 2026 00:00:00 GMT</pubDate>
+<description>A movie discovery platform in React + TypeScript. What I built and what I'd cut.</description>
+</item>
+<item>
 <title>Circles: an Instagram rebuild with a reason to exist</title>
 <link>https://0x-shadow.github.io/Blog/post.html?id=circles-private-photo-sharing</link>
 <guid>https://0x-shadow.github.io/Blog/post.html?id=circles-private-photo-sharing</guid>

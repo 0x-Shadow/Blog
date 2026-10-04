@@ -34,8 +34,8 @@ Principles: mobile-first, safe-by-default rendering, minimal text, one accent.
 - Search filter + RSS button, numbered cards linking to full posts.
 
 ### 5. `post.html?id=` — Full build-log entry
-- Progress bar, breadcrumbs, title/meta, body, prev/next pager, "open an issue" link, native SHARE button.
-- 5 notes ship with the site: SnapTap, ClipTap, CrewTrack, photo→ASCII, Code-Mate.
+- Progress bar, breadcrumbs, title/meta, body, prev/next pager, keep-reading cards, utterances comments, "open an issue" link, native SHARE button.
+- 12 notes ship with the site: 3 tutorials (RFID terminal, Expo feed UI, strict types) + CrewTrack teardown, receipt-market, CineHub, Circles, SnapTap, ClipTap, CrewTrack story, photo→ASCII, Code-Mate.
 
 ### 6. `about.html` — Whoami
 - Bio (Greece, ESP32/IoT, homelab), GitHub + Reddit links, stack chips, live repo stats, changelog, sysbox.
@@ -49,8 +49,12 @@ Principles: mobile-first, safe-by-default rendering, minimal text, one accent.
 ## Systems (`site.js`)
 - Safe markdown renderer: escapes everything, allows strict subset — headings, bold/italic, code, GFM tables, task lists, autolinks, sanitized raw HTML with validated attributes.
 - GitHub layer: repo allow-listing, FEATURED/HIDDEN sets, localStorage caching (30min TTL), profile + README fetching with correct default-branch resolution.
-- Motion: scroll reveals, page-enter transitions, marquee, glow buttons — all disabled under `prefers-reduced-motion`.
+- Motion: scroll reveals, page-enter transitions, marquee, glow buttons — all disabled under `prefers-reduced-motion`. Lenis off (native scroll); ambient particle field + orbs pause while scrolling.
 - Content system: POSTS, RELATED_POST, PROJECT_SHOTS, RELATED_STORY, TECH_DECISIONS, PROJECT_STATUS.
+- Discovery: tag pills on the log page (build-log / tutorial / code / notes), keep-reading cards on posts, every repo linked to its note via RELATED_POST.
+- Tutorials: step-by-step posts with an optional `img` (local `shots/` or raw repo files only, strict allowlist, click-to-zoom). Project banners mix local shots + real repo screenshots (CineHub home via raw).
+- Hire flow: prefilled-issue START_A_PROJECT buttons (index + project pages), no prices — blog-first.
+- Optional hooks (constants at the bottom of `site.js`, off when empty): ANALYTICS_URL (GoatCounter), STATUS_URL (Uptime Kuma footer link), utterances comments on posts (needs the app enabled on the repo).
 
 ## Design (`styles.css`)
 - Tokens: near-black `#050507` / paper `#f4f3ec`, lime accent `#d7ff3e` + mint gradient `#5eead4`, JetBrains Mono + Space Grotesk, ASCII borders.

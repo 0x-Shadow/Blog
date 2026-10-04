@@ -68,9 +68,24 @@
     </div>
     <article class="panel reveal in">
       <div class="panel-bar"><span>● ● ●</span><span>post.txt</span></div>
+      <img id="postImage" class="doc-banner" style="display:none;margin:18px 18px 0" alt="" loading="lazy" />
       <div id="postBody" class="sheet-body md"></div>
     </article>
     <nav id="postPager" class="pager"></nav>
+    <div class="section-head" style="margin-top:36px">
+      <div>
+        <div class="sec-index">keep reading</div>
+        <h2 class="sec-title" style="font-size:clamp(22px,3.5vw,30px)">UP<span class="accent">_NEXT</span></h2>
+      </div>
+    </div>
+    <div id="keepReading" class="posts"></div>
+    <div class="section-head" style="margin-top:36px">
+      <div>
+        <div class="sec-index">comments via github</div>
+        <h2 class="sec-title" style="font-size:clamp(22px,3.5vw,30px)">DIS<span class="accent">CUSS</span></h2>
+      </div>
+    </div>
+    <div id="comments" class="comments"><!-- utterances: enable the app on 0x-Shadow/Blog to switch comments on --></div>
     <div class="discuss">thoughts? <a href="https://github.com/0x-Shadow/Blog/issues" target="_blank" rel="noopener">open an issue →</a></div>
   </section>
   <footer class="footer">
@@ -99,6 +114,7 @@
           <a href="https://github.com/0x-Shadow/Blog/issues" target="_blank" rel="noopener">issues ↗</a>
           <a href="feed.xml">feed.xml</a>
           <a href="sitemap.xml">sitemap.xml</a>
+          <a id="statusLink" href="#" style="display:none">status ●</a>
         </div>
         <div class="f-col">
           <h4>meta</h4>
