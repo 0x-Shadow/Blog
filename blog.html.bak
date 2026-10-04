@@ -5,30 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0b" />
 <title>build log — 0x-shadow.log</title>
-<meta name="description" content="A build log by 0x-Shadow." />
+<meta name="description" content="Things I built, broke, fixed, and learned. By 0x-Shadow." />
 <meta property="og:title" content="build log — 0x-shadow.log" />
-<meta property="og:description" content="A build log by 0x-Shadow." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://0x-shadow.github.io/Blog/post.html" />
+<meta property="og:description" content="Things I built, broke, fixed, and learned. By 0x-Shadow." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://0x-shadow.github.io/Blog/blog.html" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="build log — 0x-shadow.log" />
-<meta name="twitter:description" content="A build log by 0x-Shadow." />
+<meta name="twitter:description" content="Things I built, broke, fixed, and learned. By 0x-Shadow." />
 <meta property="og:image" content="https://0x-shadow.github.io/Blog/shots/crewtrack.jpg" />
-<link rel="canonical" href="https://0x-shadow.github.io/Blog/post.html" />
+<link rel="canonical" href="https://0x-shadow.github.io/Blog/blog.html" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4.9.0" />
+<link rel="stylesheet" href="styles.css?v=6.0.0" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
+<link rel="alternate" type="application/rss+xml" title="0x-shadow.log notes" href="feed.xml" />
 </head>
 <body>
 <a href="#main-content" class="skip-link">skip to content</a>
-<div id="progress" class="progress"></div>
 <div class="statusbar" role="status">
   <div class="statusbar-inner">
     <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
     <span class="status-user">0x-shadow@dev:~$</span>
-    <span class="status-cmd">./read</span>
+    <span class="status-cmd">./build-log</span>
     <span class="status-right"><span id="clock">00:00:00</span> · <span class="ok">● ONLINE</span></span>
   </div>
 </div>
@@ -44,7 +44,7 @@
     </nav>
     <div class="nav-actions">
       <button id="themeBtn" class="btn btn-ghost btn-sm" title="toggle theme">◐</button>
-      <a href="blog.html" class="btn btn-solid btn-sm">ALL_LOGS ≡</a>
+      <a href="projects.html" class="btn btn-solid btn-sm">PROJECTS ↓</a>
     </div>
     <button id="menuBtn" class="menu-btn" aria-label="open menu" aria-expanded="false">[=]</button>
   </div>
@@ -57,21 +57,20 @@
   </div>
 </header>
 <main id="main-content">
-  <section class="section narrow" id="postRoot">
-    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><a href="blog.html">build log</a><span>/</span><span>read</span></div>
-    <div class="doc-head reveal in">
-      <h1 id="postTitle" class="doc-title">loading…</h1>
-      <div id="postMeta" class="post-meta"></div>
-      <div class="doc-actions">
-        <button class="btn btn-ghost btn-sm" data-share>SHARE ⧉</button>
+  <section class="section">
+    <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>build log</span></div>
+    <div class="section-head reveal in">
+      <div>
+        <div class="sec-index">[02] ./build-log</div>
+        <h2 class="sec-title anzo-scrub">BUILD<span class="accent">_LOG</span></h2>
+        <p class="sec-sub">Things I built, broke, fixed, and learned.</p>
       </div>
     </div>
-    <article class="panel reveal in">
-      <div class="panel-bar"><span>● ● ●</span><span>post.txt</span></div>
-      <div id="postBody" class="sheet-body md"></div>
-    </article>
-    <nav id="postPager" class="pager"></nav>
-    <div class="discuss">thoughts? <a href="https://github.com/0x-Shadow/Blog/issues" target="_blank" rel="noopener">open an issue →</a></div>
+    <div class="controls" style="border:1px solid var(--line2);border-radius:12px;margin-bottom:12px">
+      <label class="field grow"><span>⌕</span><input id="postSearch" placeholder="filter the log…" autocomplete="off" enterkeyhint="search" /></label>
+      <a href="feed.xml" class="btn btn-ghost btn-sm">RSS ⌁</a>
+    </div>
+    <div id="postsList" class="posts"></div>
   </section>
   <footer class="footer">
     <div class="footer-inner">
@@ -87,6 +86,7 @@
   <a href="about.html">◐ about</a>
 </nav>
 <div id="toast" class="toast" role="status"></div>
-<script src="site.js?v=4.9.0"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js" defer></script>
+<script src="site.js?v=5.8.0"></script>
 </body>
 </html>

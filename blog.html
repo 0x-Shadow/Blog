@@ -18,7 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4.9.0" />
+<link rel="dns-prefetch" href="https://unpkg.com">
+<link rel="stylesheet" href="styles.css?v=7.1.0" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
 <link rel="alternate" type="application/rss+xml" title="0x-shadow.log notes" href="feed.xml" />
 </head>
@@ -57,16 +58,19 @@
   </div>
 </header>
 <main id="main-content">
+  <section class="giant" aria-label="build log intro">
+    <div class="giant-line" data-dir="-1"><span>BUILD</span></div>
+    <div class="giant-line outline" data-dir="1"><span>_LOG</span></div>
+  </section>
   <section class="section">
     <div class="crumbs reveal in"><a href="index.html">~</a><span>/</span><span>build log</span></div>
     <div class="section-head reveal in">
       <div>
-        <div class="sec-index">[02] ./build-log</div>
-        <h2 class="sec-title">BUILD<span class="accent">_LOG</span></h2>
-        <p class="sec-sub">Things I built, broke, fixed, and learned.</p>
+        <div class="sec-index">things I built, broke, fixed, and learned</div>
+        <p class="sec-sub">Every entry is a real project with real trade-offs. Newest first.</p>
       </div>
     </div>
-    <div class="controls" style="border:1px solid var(--line2);border-radius:12px;margin-bottom:12px">
+    <div class="controls" style="border:1px solid var(--line2);border-radius:999px;margin-bottom:16px;padding:6px">
       <label class="field grow"><span>⌕</span><input id="postSearch" placeholder="filter the log…" autocomplete="off" enterkeyhint="search" /></label>
       <a href="feed.xml" class="btn btn-ghost btn-sm">RSS ⌁</a>
     </div>
@@ -86,6 +90,7 @@
   <a href="about.html">◐ about</a>
 </nav>
 <div id="toast" class="toast" role="status"></div>
-<script src="site.js?v=4.9.0"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js" defer></script>
+<script src="site.js?v=6.0.0"></script>
 </body>
 </html>

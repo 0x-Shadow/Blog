@@ -519,26 +519,56 @@ function projectCard(r, i, owner) {
     card.addEventListener("pointerleave", () => { card.style.transform = ""; });
   });
 })();
-/* ── motion engine v6: one rAF loop, scrub-driven reveals ──
-   Continuous progress mapping (like GSAP scrub) — no class-toggle snapping.
-   Lenis inertia on fine pointers; native fallback everywhere else. */
-const MOTION = { jobs: [], raf: 0, lenis: null };
-(function motionBoot() {
-  if (reduceMotion) {
-    document.querySelectorAll(".reveal").forEach(el => el.classList.add("in"));
-    return;
-  }
-  const loop = () => {
-    MOTION.raf = requestAnimationFrame(loop);
-    if (document.hidden) return;
-    const vh = innerHeight || 600;
-    for (const j of MOTION.jobs) j(vh);
+(function heroTilt() {
+  if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
+  const hero = document.querySelector(".hero");
+  const tilt = document.querySelector(".tilt-hero");
+  const bg = document.querySelector(".hero-bg");
+  if (!hero || !tilt) return;
+  hero.style.perspective = "1000px";
+  const set = (x, y) => {
+    tilt.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.05)`;
+    if (bg) bg.style.transform = `translate(${x * 18}px, ${y * 18}px) scale(1.05)`;
   };
-  loop();
+  hero.addEventListener("pointermove", e => {
+    const r = tilt.getBoundingClientRect();
+    set((e.clientX - r.left) / r.width - .5, (e.clientY - r.top) / r.height - .5);
+  }, { passive: true });
+  hero.addEventListener("pointerleave", () => {
+    tilt.style.transform = ""; if (bg) bg.style.transform = "";
+  });
+  let n = 0;
+  const demo = setInterval(() => {
+    n++;
+    if (n === 1) set(.18, -.12);
+    else if (n === 2) set(-.14, .1);
+    else { set(0, 0); tilt.style.transform = ""; if (bg) bg.style.transform = ""; clearInterval(demo); }
+  }, 420);
+  setTimeout(() => clearInterval(demo), 2200);
 })();
-function onFrame(job) { MOTION.jobs.push(job); }
-/* word-split every sec-title for slide reveal */
+(function magneticBtns() {
+  if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
+  document.querySelectorAll(".hero-cta .btn").forEach(b => {
+    b.addEventListener("pointermove", e => {
+      const r = b.getBoundingClientRect();
+      b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .18}px, ${(e.clientY - r.top - r.height / 2) * .28}px)`;
+    });
+    b.addEventListener("pointerleave", () => { b.style.transform = ""; });
+  });
+})();
+(function marquee() {
+  if (reduceMotion) return;
+  const host = document.querySelector("main");
+  const hero = document.querySelector(".hero");
+  if (!host || !hero) return;
+  const m = document.createElement("div");
+  m.className = "marquee";
+  m.setAttribute("aria-hidden", "true");
+  m.innerHTML = `<div class="marquee-track"><span>BUILD ▓ AUTOMATE ▓ HOST ▓ </span><span class="outline">ESP32 · WEB · TOOLS · HOMELAB · </span><span>BUILD ▓ AUTOMATE ▓ HOST ▓ </span><span class="outline">ESP32 · WEB · TOOLS · HOMELAB · </span></div>`;
+  hero.after(m);
+})();
 (function slideSplit() {
+  if (reduceMotion) return;
   document.querySelectorAll(".sec-title").forEach(h => {
     if (h.querySelector(".slide-w")) return;
     let i = 0;
@@ -564,80 +594,55 @@ function onFrame(job) { MOTION.jobs.push(job); }
         wrap(n); i++;
       }
     });
+    h.classList.add("anzo-scrub");
   });
 })();
-/* scrub: word slides track scroll position continuously (anzo Page2 feel) */
-(function scrubWords() {
-  if (reduceMotion) return;
-  const titles = [...document.querySelectorAll(".sec-title")];
-  if (!titles.length) return;
-  const ease = t => 1 - Math.pow(1 - t, 3);
-  onFrame(vh => {
-    for (const h of titles) {
-      const r = h.getBoundingClientRect();
-      if (r.bottom < -80 || r.top > vh + 80) continue;
-      const p = Math.max(0, Math.min(1, (vh * 0.92 - r.top) / (vh * 0.62)));
-      const words = h.querySelectorAll(".slide-w > span");
-      words.forEach((w, i) => {
-        const wp = ease(Math.max(0, Math.min(1, p * 1.6 - i * 0.12)));
-        const dir = getComputedStyle(w).getPropertyValue("--sx").includes("-") ? -1 : 1;
-        w.style.transform = `perspective(900px) translateX(${(1 - wp) * dir * 110}%) skewX(${(1 - wp) * -7}deg)`;
-        w.style.opacity = wp.toFixed(3);
-      });
-    }
-  });
+(function scrubTitles() {
+  if (reduceMotion) {
+    document.querySelectorAll(".anzo-scrub, .sec-title").forEach(el => el.classList.add("scrub-in", "slide-done"));
+    return;
+  }
+  const els = [...document.querySelectorAll(".anzo-scrub, .sec-title")];
+  if (!els.length) return;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const vh = innerHeight || 600;
+    els.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const visible = r.top < vh * .85 && r.bottom > vh * .15;
+      el.classList.toggle("scrub-in", visible);
+    });
+  };
+  addEventListener("scroll", () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  addEventListener("resize", update);
+  update();
 })();
-/* giant statement slider — continuous scrub, skew follows velocity */
 (function giantSlide() {
   if (reduceMotion) return;
   const lines = [...document.querySelectorAll(".giant-line > span")];
   if (!lines.length) return;
-  onFrame(vh => {
-    for (const el of lines) {
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const vh = innerHeight || 600;
+    lines.forEach(el => {
       const line = el.parentElement;
       const r = line.getBoundingClientRect();
-      if (r.bottom < -200 || r.top > vh + 200) continue;
       const p = (r.top + r.height / 2 - vh / 2) / vh;
       const dir = Number(line.dataset.dir || 1);
-      const x = Math.max(-1, Math.min(1, p)) * dir * -26;
-      el.style.transform = `translateX(${x}vw) perspective(900px) rotateY(${x * .25}deg) skewX(${x * -.12}deg)`;
-    }
-  });
-})();
-/* hero tilt + parallax — lerped so it glides instead of jumping */
-(function heroTilt() {
-  if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
-  const hero = document.querySelector(".hero");
-  const tilt = document.querySelector(".tilt-hero");
-  const bg = document.querySelector(".hero-bg");
-  if (!hero || !tilt) return;
-  hero.style.perspective = "1000px";
-  let tx = 0, ty = 0, cx = 0, cy = 0;
-  hero.addEventListener("pointermove", e => {
-    const r = tilt.getBoundingClientRect();
-    tx = (e.clientX - r.left) / r.width - .5;
-    ty = (e.clientY - r.top) / r.height - .5;
+      const x = Math.max(-1, Math.min(1, p)) * dir * -22;
+      el.style.transform = `translateX(${x}vw) perspective(900px) rotateY(${x * .3}deg) skewX(${x * -.15}deg)`;
+    });
+  };
+  addEventListener("scroll", () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
-  hero.addEventListener("pointerleave", () => { tx = 0; ty = 0; });
-  onFrame(() => {
-    cx += (tx - cx) * .07; cy += (ty - cy) * .07;
-    if (Math.abs(cx) < .001 && Math.abs(cy) < .001 && !tx && !ty) return;
-    tilt.style.transform = `perspective(1000px) rotateY(${cx * 9}deg) rotateX(${-cy * 9}deg) scale(1.03)`;
-    if (bg) bg.style.transform = `translate(${cx * 22}px, ${cy * 22}px) scale(1.06)`;
-  });
+  addEventListener("resize", update);
+  update();
 })();
-/* marquee under hero — home only */
-(function marquee() {
-  if (reduceMotion) return;
-  const hero = document.querySelector(".hero");
-  if (!hero) return;
-  const m = document.createElement("div");
-  m.className = "marquee";
-  m.setAttribute("aria-hidden", "true");
-  m.innerHTML = `<div class="marquee-track"><span>BUILD ▓ AUTOMATE ▓ HOST ▓ </span><span class="outline">ESP32 · WEB · TOOLS · HOMELAB · </span><span>BUILD ▓ AUTOMATE ▓ HOST ▓ </span><span class="outline">ESP32 · WEB · TOOLS · HOMELAB · </span></div>`;
-  hero.after(m);
-})();
-/* Lenis inertia scroll — same library as anzo-studio */
 (function smoothScroll() {
   if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
   let tries = 0;
@@ -648,7 +653,6 @@ function onFrame(job) { MOTION.jobs.push(job); }
     }
     try {
       const lenis = new window.Lenis({ lerp: 0.09, smoothWheel: true });
-      MOTION.lenis = lenis;
       const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
       requestAnimationFrame(raf);
       document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -758,8 +762,8 @@ function postNo(p) {
 function postCard(p) {
   return `
   <a class="post reveal" href="post.html?id=${esc(p.id)}">
-    <span class="post-date">#${postNo(p)} · ${esc(p.date)}</span>
-    <div class="post-main"><h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p></div>
+    <span class="post-date">#${postNo(p)} · ${esc(p.date)} · ${esc(p.tag)}</span>
+    <h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p>
     <div class="post-foot"><span>◷ ${esc(p.read)}</span><span>READ →</span></div>
   </a>`;
 }
