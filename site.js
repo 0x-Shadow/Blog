@@ -521,7 +521,7 @@ function projectCard(r, i, owner) {
 })();
 /* ── motion engine v6: one rAF loop, scrub-driven reveals ──
    Continuous progress mapping (like GSAP scrub) — no class-toggle snapping.
-   Lenis inertia on fine pointers; native fallback everywhere else. */
+   Native scroll everywhere (Lenis off); scrub follows the rAF loop. */
 const MOTION = { jobs: [], raf: 0, lenis: null };
 (function motionBoot() {
   if (reduceMotion) {
@@ -548,6 +548,7 @@ function onFrame(job) { MOTION.jobs.push(job); }
       const inner = document.createElement("span");
       inner.style.setProperty("--i", i++);
       inner.textContent = node.textContent;
+      inner.className = node.className || "";
       w.appendChild(inner);
       node.replaceWith(w);
     };
@@ -637,8 +638,11 @@ function onFrame(job) { MOTION.jobs.push(job); }
   m.innerHTML = `<div class="marquee-track"><span>BUILD ▓ AUTOMATE ▓ HOST ▓ </span><span class="outline">ESP32 · WEB · TOOLS · HOMELAB · </span><span>BUILD ▓ AUTOMATE ▓ HOST ▓ </span><span class="outline">ESP32 · WEB · TOOLS · HOMELAB · </span></div>`;
   hero.after(m);
 })();
-/* Lenis inertia scroll — same library as anzo-studio */
+/* Lenis inertia scroll — OFF: native scroll restored (Lenis queued input on heavy
+   pages → lag-then-fling). Anchors still glide via html{scroll-behavior:smooth}. */
+const USE_SMOOTH_SCROLL = false;
 (function smoothScroll() {
+  if (!USE_SMOOTH_SCROLL) return;
   if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
   let tries = 0;
   const boot = () => {
@@ -1196,3 +1200,112 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
 })();
 
 bindReveals(document);
+
+/* ── ambient layer v8: aurora orbs + particle field + cursor dot ──
+   Pure decoration, injected so every page gets it with zero HTML edits.
+   Theme-aware (follows data-theme), pauses when hidden, reduced-motion safe. */
+(function ambient() {
+  /* orbs + dot grid + scanlines — cheap CSS, fine on touch too */
+  if (!reduceMotion) {
+    const wrap = document.createElement("div");
+    wrap.className = "ambient";
+    wrap.setAttribute("aria-hidden", "true");
+    wrap.innerHTML = '<span class="orb orb-a"></span><span class="orb orb-b"></span><span class="orb orb-c"></span><span class="gridlayer"></span><span class="scan"></span>';
+    document.body.appendChild(wrap);
+  }
+  if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
+
+  /* particle constellation */
+  const cv = document.createElement("canvas");
+  cv.id = "field";
+  cv.setAttribute("aria-hidden", "true");
+  document.body.appendChild(cv);
+  const ctx = cv.getContext("2d");
+  let W = 0, H = 0, dpr = 1, pts = [];
+  let rgb = "215, 255, 62";
+  const readTheme = () => { rgb = document.documentElement.dataset.theme === "light" ? "74, 94, 20" : "215, 255, 62"; };
+  readTheme();
+  try {
+    new MutationObserver(readTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  } catch {}
+
+  function sizeField() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.width = innerWidth * dpr;
+    H = cv.height = innerHeight * dpr;
+    const n = Math.min(52, Math.floor(innerWidth / 26));
+    pts = Array.from({ length: n }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: (Math.random() * 1.2 + 0.4) * dpr,
+      s: Math.random() * 0.14 + 0.03,
+      p: Math.random() * Math.PI * 2,
+      d: Math.random() * 0.6 + 0.4,
+    }));
+  }
+  sizeField();
+  addEventListener("resize", sizeField);
+  /* freeze heavy background work while the page moves — scroll stays instant */
+  let scrolling = false, scrollT = 0;
+  addEventListener("scroll", () => {
+    if (!scrolling) { scrolling = true; document.body.classList.add("is-scrolling"); }
+    clearTimeout(scrollT);
+    scrollT = setTimeout(() => { scrolling = false; document.body.classList.remove("is-scrolling"); }, 160);
+  }, { passive: true });
+  const m = { x: 0.5, y: 0.5 };
+  addEventListener("pointermove", e => { m.x = e.clientX / innerWidth; m.y = e.clientY / innerHeight; }, { passive: true });
+
+  (function drawField(t) {
+    requestAnimationFrame(drawField);
+    if (document.hidden || scrolling) return;
+    ctx.clearRect(0, 0, W, H);
+    const ox = (m.x - 0.5) * 20 * dpr, oy = (m.y - 0.5) * 20 * dpr;
+    for (const p of pts) {
+      p.y -= p.s * dpr;
+      if (p.y < -8) { p.y = H + 8; p.x = Math.random() * W; }
+      const tw = 0.4 + 0.6 * Math.sin(t * 0.0011 + p.p);
+      ctx.beginPath();
+      ctx.arc(p.x + ox * p.d, p.y + oy * p.d, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(" + rgb + "," + (0.5 * tw).toFixed(3) + ")";
+      ctx.fill();
+    }
+    const max = 100 * dpr, max2 = max * max;
+    ctx.lineWidth = dpr * 0.5;
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const a = pts[i], b = pts[j];
+        const dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+        if (d2 < max2) {
+          const alpha = 0.1 * (1 - Math.sqrt(d2) / max);
+          ctx.strokeStyle = "rgba(" + rgb + "," + alpha.toFixed(3) + ")";
+          ctx.beginPath();
+          ctx.moveTo(a.x + ox * a.d, a.y + oy * a.d);
+          ctx.lineTo(b.x + ox * b.d, b.y + oy * b.d);
+          ctx.stroke();
+        }
+      }
+    }
+  })(0);
+
+  /* cursor dot + ring — complements the existing lime glow orb */
+  const dot = document.createElement("div");
+  const ring = document.createElement("div");
+  dot.className = "cursor-dot";
+  ring.className = "cursor-ring";
+  dot.setAttribute("aria-hidden", "true");
+  ring.setAttribute("aria-hidden", "true");
+  document.body.append(dot, ring);
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  addEventListener("pointermove", e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  (function moveCursor() {
+    requestAnimationFrame(moveCursor);
+    if (document.hidden) return;
+    rx += (mx - rx) * 0.16;
+    ry += (my - ry) * 0.16;
+    dot.style.transform = "translate(" + mx + "px," + my + "px) translate(-50%,-50%)";
+    ring.style.transform = "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
+  })();
+  const HOVER_SEL = "a,button,input,select,summary,.card,.post,.tilt";
+  document.addEventListener("mouseover", e => { if (e.target.closest(HOVER_SEL)) ring.classList.add("hovering"); });
+  document.addEventListener("mouseout", e => { if (e.target.closest(HOVER_SEL)) ring.classList.remove("hovering"); });
+})();

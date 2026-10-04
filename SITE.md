@@ -53,7 +53,8 @@ Principles: mobile-first, safe-by-default rendering, minimal text, one accent.
 - Content system: POSTS, RELATED_POST, PROJECT_SHOTS, RELATED_STORY, TECH_DECISIONS, PROJECT_STATUS.
 
 ## Design (`styles.css`)
-- Tokens: near-black `#0a0a0b` / paper `#ececea`, one lime accent, JetBrains Mono + Space Grotesk, ASCII borders.
+- Tokens: near-black `#050507` / paper `#f4f3ec`, lime accent `#d7ff3e` + mint gradient `#5eead4`, JetBrains Mono + Space Grotesk, ASCII borders.
+- v8 "nebula-grade": ambient aurora orbs + particle constellation + dot grid + scanlines (injected by `site.js`, zero HTML edits), glass panels, gradient CTAs with shine sweep, separated project cards, gradient scrub-titles, custom cursor dot+ring, richer footer.
 - Dark + paper-light themes (persisted), breakpoints 1024/860/560, 44px touch targets, bottom tabbar on phones, print stylesheet.
 - Skip-to-content link, canonical URLs, OG/Twitter meta on every page.
 
