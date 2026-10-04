@@ -679,6 +679,17 @@ summary::marker{content:""}
   .hero{background:var(--bg) url("shots/bg-poster.jpg") center 30%/cover no-repeat}
   .hero-bg{display:none}
 }
+/* ── mobile GPU pass: keep every animation, drop the costly blurs ──
+   Backdrop-blur + huge animated blur layers stall phone GPUs mid-scroll,
+   which is what made reveals/scrubs look janky or missing. */
+@media(max-width:720px),(pointer:coarse){
+  .orb-b,.orb-c{display:none}
+  .orb-a{animation-duration:48s}
+  .statusbar,.nav-inner,.mobile-menu,.panel,.hero-stats,.card,.post,.spot,
+  .hire-card,.doc-hero,.story-box,.toc-box,.marquee,.tabbar,.footer{
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .reveal{filter:none}
+}
 @media(max-height:500px) and (orientation:landscape){
   .hero{min-height:auto}
   .hero-inner{padding-top:110px}
