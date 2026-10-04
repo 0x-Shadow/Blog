@@ -441,23 +441,31 @@ function projectCard(r, i, owner) {
   const v = document.querySelector(".hero-bg");
   if (!v || v.tagName !== "VIDEO") return;
 
-  v.muted = true;
-  v.playsInline = true;
-  v.playbackRate = 0.5;
-  const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  /* touch / small screens / reduced motion: static poster — skip download + decode */
+  if (reduceMotion || matchMedia("(pointer: coarse)").matches || innerWidth < 720) {
+    v.removeAttribute("src");
+    const src = v.querySelector("source");
+    if (src) src.remove();
+    try { v.load(); } catch {}
+  } else {
+    v.muted = true;
+    v.playsInline = true;
+    v.playbackRate = 0.5;
+    const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
 
-  /* try immediately */
-  tryPlay();
-  /* retry when enough data loaded */
-  v.addEventListener("canplay", tryPlay);
-  v.addEventListener("loadeddata", tryPlay);
-  /* retry on first user interaction (for strict autoplay policies) */
-  const unlock = () => { tryPlay(); document.removeEventListener("click", unlock); document.removeEventListener("touchstart", unlock); };
-  document.addEventListener("click", unlock);
-  document.addEventListener("touchstart", unlock);
-  document.addEventListener("keydown", unlock);
-  /* pause when tab hidden, resume when visible */
-  document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : tryPlay(); });
+    /* try immediately */
+    tryPlay();
+    /* retry when enough data loaded */
+    v.addEventListener("canplay", tryPlay);
+    v.addEventListener("loadeddata", tryPlay);
+    /* retry on first user interaction (for strict autoplay policies) */
+    const unlock = () => { tryPlay(); document.removeEventListener("click", unlock); document.removeEventListener("touchstart", unlock); };
+    document.addEventListener("click", unlock);
+    document.addEventListener("touchstart", unlock);
+    document.addEventListener("keydown", unlock);
+    /* pause when tab hidden, resume when visible */
+    document.addEventListener("visibilitychange", () => { document.hidden ? v.pause() : tryPlay(); });
+  }
 
   /* scroll cue fades out as user scrolls past hero */
   const cue = document.querySelector(".scroll-cue");
@@ -610,7 +618,8 @@ function onFrame(job) { MOTION.jobs.push(job); }
   if (reduceMotion || matchMedia("(pointer: coarse)").matches) return;
   const hero = document.querySelector(".hero");
   const tilt = document.querySelector(".tilt-hero");
-  const bg = document.querySelector(".hero-bg");
+  /* parallax the cheap gradient layer, never the video (repainting video lags) */
+  const bg = document.querySelector(".hero-aura") || document.querySelector(".hero-bg");
   if (!hero || !tilt) return;
   hero.style.perspective = "1000px";
   let tx = 0, ty = 0, cx = 0, cy = 0;

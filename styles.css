@@ -557,14 +557,18 @@ summary::marker{content:""}
   .cursor-dot,.cursor-ring{display:none!important}
 }
 
-/* ── responsive ── */
+/* ── responsive — tuned per screen size ── */
+@media(max-width:1200px){
+  .section{padding-left:20px;padding-right:20px}
+  .hero-inner{padding-left:20px;padding-right:20px}
+}
 @media(max-width:1024px){
   .hero-inner{gap:28px}
   .grid{grid-template-columns:1fr 1fr}
   .footer-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:860px){
-  .hero-inner{padding-top:60px}
+  .hero-inner{padding-top:110px}
   .about-grid{grid-template-columns:1fr}
   .nav-links,.nav-actions{display:none}
   .menu-btn{display:block;margin-left:auto}
@@ -581,21 +585,45 @@ summary::marker{content:""}
   .post{grid-template-columns:1fr;gap:8px}
   .post-foot{flex-direction:row;align-items:center;justify-content:space-between}
   .footer-grid{grid-template-columns:1fr 1fr}
+  .section-head{flex-direction:column;align-items:stretch}
+  .section-head .btn{align-self:flex-start}
+  .scroll-cue{display:none}
+  .hero-sub{white-space:normal;overflow:visible;text-overflow:clip}
+}
+@media(max-width:720px){
+  .hero{background:var(--bg) url("shots/bg-poster.jpg") center 30%/cover no-repeat}
+  .hero-bg{display:none}
+  .spot{flex-direction:column;align-items:stretch;gap:16px;padding:22px}
+  .spot-badge{width:fit-content}
+  .spot-actions .btn{flex:1}
+  .hero-title{font-size:clamp(48px,11vw,72px);letter-spacing:-3px}
+  .giant-line>span{font-size:clamp(48px,11vw,96px)}
+  .giant-line{padding:0 16px}
+  .marquee-track{font-size:clamp(24px,5.4vw,40px)}
+  .doc-hero{padding:26px 22px}
+  .pager{grid-template-columns:1fr}
+  .page-btn:nth-child(2){order:-1}
 }
 @media(max-width:560px){
   body{font-size:15.5px}
   .status-cmd{display:none}
   .grid{grid-template-columns:1fr}
-  .card,.skel{border-radius:var(--r)}
-  .hero-title{letter-spacing:-2.5px}
+  .hero-title{font-size:clamp(42px,13.5vw,60px);letter-spacing:-2.5px;line-height:.95}
+  .hero-sub{font-size:14.5px;min-height:0}
+  .hero-desc{font-size:15px}
+  .hero-cta{flex-direction:column}
+  .hero-cta .btn{width:100%}
+  .hero-stats b{font-size:19px}
+  .hero-stats div{padding:12px 4px}
+  .sec-title{font-size:clamp(28px,8vw,38px)}
   .profile-strip{gap:10px;padding:14px;flex-direction:column;align-items:stretch}
   .profile-avatar{width:44px;height:44px}
   .profile-stats{width:100%}
-  .profile-stats div{flex:1}
+  .profile-stats div{flex:1;padding:8px 6px}
   .profile-bio{white-space:normal}
-  .section{padding:64px 14px 8px}
+  .section{padding:52px 14px 8px;content-visibility:auto;contain-intrinsic-size:auto 480px}
   .card{padding:20px 18px}
-  .post{padding:22px 18px}
+  .post{padding:20px 18px}
   .tabbar{display:flex}
   .tabbar a{font-size:11px;padding:12px 2px}
   .sheet-foot .btn{flex:1}
@@ -603,23 +631,58 @@ summary::marker{content:""}
   .field input,.userbox-row input,.term-form input{font-size:16px}
   .skel{height:170px}
   .doc-hero{padding:22px 18px}
+  .doc-hero .doc-title{font-size:clamp(28px,8.4vw,40px)}
   .doc-banner{height:200px}
   .controls{grid-template-columns:1fr}
   .select{width:100%}
   .doc-actions .btn,.doc-actions button{flex:1 1 44%}
-  .spot-actions .btn{flex:1}
   .profile-meta{min-width:0}
-  .hero-cta .btn{flex:1}
   .sheet-body{padding:16px 14px}
   .md pre{padding:12px;font-size:12px}
   .md table{font-size:12px}
   .dna-row{grid-template-columns:repeat(2,1fr)}
   .story-row{grid-template-columns:1fr;gap:4px}
-  .giant{padding:9vh 0}
-  .giant-line>span{letter-spacing:-3px}
-  .footer-grid{grid-template-columns:1fr}
-  .footer-inner{padding:28px 16px 36px}
+  .giant{padding:6vh 0}
+  .giant-line>span{font-size:clamp(40px,12vw,64px);letter-spacing:-2.5px}
+  .footer-grid{grid-template-columns:1fr;gap:24px}
+  .footer-inner{padding:28px 16px 110px}
   .f-socials{margin-bottom:8px}
+  .footer-row{justify-content:center;text-align:center}
+  .hire-card{padding:22px 20px}
+}
+@media(max-width:390px){
+  .nav-inner{gap:10px;padding:8px 10px}
+  .logo{font-size:14.5px}
+  .statusbar-inner{padding:6px 12px;font-size:11px}
+  .statusbar-inner #clock{display:none}
+  .hero-inner{padding:100px 14px 48px}
+  .hero-title{font-size:clamp(38px,14vw,48px);letter-spacing:-2px}
+  .eyebrow{font-size:10.5px;letter-spacing:2px}
+  .hero-stats span{font-size:9px;letter-spacing:1px}
+  .giant-line>span{font-size:clamp(36px,13vw,52px)}
+  .tabbar a{font-size:10px;padding:12px 1px}
+  .doc-actions .btn,.doc-actions button{flex:1 1 100%}
+  .dna-row{gap:8px}
+  .dna-row b{font-size:12px}
+  .userbox-row{flex-direction:column}
+  .userbox-row .btn{width:100%}
+}
+@media(max-width:340px){
+  .hero-title{font-size:36px}
+  .sec-title{font-size:26px}
+  .profile-stats div{padding:8px 4px}
+  .profile-stats b{font-size:14px}
+  .spot-chips span{font-size:10px;padding:3px 10px}
+  .toast{font-size:11.5px;padding:12px 18px}
+}
+@media(pointer:coarse){
+  .hero{background:var(--bg) url("shots/bg-poster.jpg") center 30%/cover no-repeat}
+  .hero-bg{display:none}
+}
+@media(max-height:500px) and (orientation:landscape){
+  .hero{min-height:auto}
+  .hero-inner{padding-top:110px}
+  .giant{padding:5vh 0}
 }
 @media print{
   .nav,.tabbar,.statusbar,.controls,.term-form,.doc-actions,.pager,.hire,.hire-mini,.toast,.copy-code,.toc-wrap,.scroll-cue,.giant,.marquee,.ambient,#field,.cursor-dot,.cursor-ring{display:none!important}
